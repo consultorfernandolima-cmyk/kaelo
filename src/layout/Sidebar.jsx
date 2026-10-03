@@ -7,7 +7,6 @@ import {
   FileText,
   LayoutDashboard,
   Settings,
-  Users,
   Warehouse,
 } from 'lucide-react'
 
@@ -20,7 +19,6 @@ const groups = [
     label: 'Cadastros',
     items: [
       { to: '/cadastros', label: 'Cadastros', icon: ClipboardList, end: true },
-      { to: '/clientes', label: 'Parceiros', icon: Users },
     ],
   },
   {
@@ -44,7 +42,12 @@ const groups = [
     items: [
       { to: '/financeiro', label: 'Financeiro', icon: BarChart3 },
       { to: '/relatorios', label: 'Relatórios', icon: BarChart3 },
-      { to: '/configuracoes', label: 'Configurações', icon: Settings },
+    ],
+  },
+  {
+    label: 'Administração',
+    items: [
+      { to: '/configuracoes', label: 'Configurações', icon: Settings, end: true },
     ],
   },
 ]
