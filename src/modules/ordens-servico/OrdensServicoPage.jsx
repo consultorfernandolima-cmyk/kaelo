@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ClipboardCheck, Eye, Plus, Printer, Search, Wrench } from 'lucide-react'
+import { ClipboardCheck, Eye, FileText, Plus, Printer, Search, Wrench } from 'lucide-react'
 import { formatDate, StatusBadge } from '../../components/ui.jsx'
 
 const initial = [
@@ -17,6 +17,8 @@ export default function OrdensServicoPage() {
   const [q, setQ] = useState('')
   const [modal, setModal] = useState(false)
   const [view, setView] = useState(null)
+  const [report, setReport] = useState(null)
+  const [reports, setReports] = useState({})
 
   const rows = useMemo(() => items.filter(i => Object.values(i).some(v => String(v).toLowerCase().includes(q.toLowerCase()))), [items, q])
 
@@ -27,6 +29,29 @@ export default function OrdensServicoPage() {
     setItems(x => [item, ...x])
     setModal(false)
     setView(item)
+  }
+
+  function createReport(item) {
+    const generated = {
+      os: item.id,
+      cliente: item.cliente,
+      usina: item.usina,
+      tecnico: item.tecnico,
+      data: item.data,
+      servico: item.tipo,
+      status: 'Concluído',
+      condicao: 'Sistema inspecionado e atendimento executado conforme escopo da OS.',
+      atividades: item.tipo === 'Limpeza de módulos'
+        ? 'Limpeza técnica dos módulos, inspeção visual e registro das condições encontradas.'
+        : item.tipo === 'Manutenção preventiva'
+          ? 'Verificação de conexões, estrutura, inversor e pontos de atenção preventiva.'
+          : 'Execução do atendimento previsto na ordem de serviço e verificação operacional.',
+      observacoes: item.observacoes || 'Sem observações adicionais.',
+      recomendacoes: 'Manter o plano de manutenção e registrar o próximo atendimento no histórico da usina.',
+    }
+    setReports(x => ({ ...x, [item.id]: generated }))
+    setReport(generated)
+    setView(null)
   }
 
   function advance(item) {
@@ -77,7 +102,20 @@ export default function OrdensServicoPage() {
         <div className="grid gap-4 md:grid-cols-4"><div><p className="text-xs text-slate-500">Modelo</p><p className="mt-1 font-semibold">{view.modelo}</p></div><div><p className="text-xs text-slate-500">Serviço</p><p className="mt-1 font-semibold">{view.tipo}</p></div><div><p className="text-xs text-slate-500">Data</p><p className="mt-1 font-semibold">{formatDate(view.data)}</p></div><div><p className="text-xs text-slate-500">Status</p><p className="mt-1"><StatusBadge tone={statusTone[view.status] || 'slate'}>{view.status}</StatusBadge></p></div></div>
         <div className="rounded-xl border border-slate-200 p-5"><p className="text-xs uppercase tracking-wider text-slate-400">Técnico responsável</p><p className="mt-2 text-base text-navy-900">{view.tecnico}</p><p className="mt-4 text-xs uppercase tracking-wider text-slate-400">Observações</p><p className="mt-2 text-sm leading-6 text-slate-600">{view.observacoes || 'Sem observações registradas.'}</p></div>
         <div className="rounded-xl bg-slate-50 p-5"><p className="text-sm font-semibold text-navy-900">Próximo passo operacional</p><p className="mt-2 text-sm leading-6 text-slate-600">{nextStatus[view.status] ? `Avançar para “${nextStatus[view.status]}” e, após a conclusão, gerar o relatório do atendimento.` : 'Atendimento concluído. Próxima etapa: relatório técnico e histórico da usina.'}</p></div>
-        <div className="flex gap-2"><button className="btn-primary" onClick={() => window.print()}><Printer size={16} /> Imprimir OS / PDF</button>{nextStatus[view.status] && <button className="btn-secondary" onClick={() => advance(view)}>Avançar status</button>}</div>
+        <div className="flex flex-wrap gap-2"><button className="btn-primary" onClick={() => window.print()}><Printer size={16} /> Imprimir OS / PDF</button>{nextStatus[view.status] && <button className="btn-secondary" onClick={() => advance(view)}>Avançar status</button>}{view.status === 'Concluída' && <button className="btn-secondary" onClick={() => createReport(view)}><FileText size={16} /> Gerar relatório técnico</button>}{reports[view.id] && <button className="btn-secondary" onClick={() => { setReport(reports[view.id]); setView(null) }}><FileText size={16} /> Ver relatório</button>}</div>
+      </div>
+    </article></div>}
+
+    {report && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4"><article className="w-full max-w-3xl rounded-2xl bg-white shadow-xl">
+      <div className="border-b border-slate-200 p-6"><div className="flex items-start justify-between"><div><p className="text-xs uppercase tracking-wider text-solar-green">Kaelo ERP · Gestão de Usinas · Relatório Técnico</p><h3 className="mt-1 text-2xl font-bold text-navy-900">Relatório de Atendimento</h3><p className="mt-1 text-sm text-slate-500">{report.os} · {report.cliente} · {report.usina}</p></div><button className="btn-secondary" onClick={() => setReport(null)}>Fechar</button></div></div>
+      <div className="space-y-5 p-6">
+        <div className="grid gap-4 md:grid-cols-4"><div><p className="text-xs text-slate-500">OS</p><p className="mt-1 font-semibold">{report.os}</p></div><div><p className="text-xs text-slate-500">Data</p><p className="mt-1 font-semibold">{formatDate(report.data)}</p></div><div><p className="text-xs text-slate-500">Técnico</p><p className="mt-1 font-semibold">{report.tecnico}</p></div><div><p className="text-xs text-slate-500">Status</p><p className="mt-1"><StatusBadge tone="green">{report.status}</StatusBadge></p></div></div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-slate-200 p-5"><p className="text-xs uppercase tracking-wider text-slate-400">Serviço executado</p><p className="mt-2 text-sm leading-6 text-slate-600">{report.servico}</p><p className="mt-4 text-xs uppercase tracking-wider text-slate-400">Atividades realizadas</p><p className="mt-2 text-sm leading-6 text-slate-600">{report.atividades}</p></div>
+          <div className="rounded-xl border border-slate-200 p-5"><p className="text-xs uppercase tracking-wider text-slate-400">Condição do sistema</p><p className="mt-2 text-sm leading-6 text-slate-600">{report.condicao}</p><p className="mt-4 text-xs uppercase tracking-wider text-slate-400">Recomendações</p><p className="mt-2 text-sm leading-6 text-slate-600">{report.recomendacoes}</p></div>
+        </div>
+        <div className="rounded-xl bg-slate-50 p-5"><p className="text-xs uppercase tracking-wider text-slate-400">Observações</p><p className="mt-2 text-sm leading-6 text-slate-600">{report.observacoes}</p></div>
+        <div className="flex gap-2"><button className="btn-primary" onClick={() => window.print()}><Printer size={16} /> Imprimir relatório / PDF</button><button className="btn-secondary" onClick={() => setReport(null)}>Fechar</button></div>
       </div>
     </article></div>}
   </section>
