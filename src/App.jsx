@@ -6,6 +6,7 @@ import UsinasPage from './modules/usinas/UsinasPage.jsx'
 import UsinaCadastroPage from './modules/usinas/UsinaCadastroPage.jsx'
 import PropostasPage from './modules/propostas/PropostasPage.jsx'
 import OrdensServicoPage from './modules/ordens-servico/OrdensServicoPage.jsx'
+import CadastrosPage from './modules/cadastros/CadastrosPage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
 
 const modulePages = {
@@ -23,18 +24,14 @@ export default function App() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route path="/" element={<DashboardPage />} />
+        <Route path="/cadastros" element={<CadastrosPage />} />
         <Route path="/clientes" element={<ClientesPage />} />
         <Route path="/usinas" element={<UsinasPage />} />
         <Route path="/usinas/cadastro" element={<UsinaCadastroPage />} />
         <Route path="/propostas" element={<PropostasPage />} />
         <Route path="/ordens-servico" element={<OrdensServicoPage />} />
-
         {Object.entries(modulePages).map(([path, [title, description, eyebrow]]) => (
-          <Route
-            key={path}
-            path={path}
-            element={<ModulePage title={title} description={description} eyebrow={eyebrow} />}
-          />
+          <Route key={path} path={path} element={<ModulePage title={title} description={description} eyebrow={eyebrow} />} />
         ))}
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
