@@ -1,56 +1,33 @@
 export const kpis = {
-  totalClientes: 128,
-  usinasInstaladas: 94,
-  manutencoesPendentesMes: 11,
-  faturamentoEstimado: 486750,
+  parceiros: 128,
+  oportunidades: 27,
+  propostasAbertas: 14,
+  contratosAtivos: 38,
+  contasReceber: 284500,
+  contasPagar: 173200,
+  ordensAbertas: 11,
+  estoqueCritico: 6,
 }
 
+export const funil = [
+  { etapa: 'Prospecção', quantidade: 12, valor: 184000 },
+  { etapa: 'Proposta enviada', quantidade: 7, valor: 326500 },
+  { etapa: 'Negociação', quantidade: 5, valor: 412000 },
+  { etapa: 'Ganho', quantidade: 3, valor: 219800 },
+]
+
+export const atividadesRecentes = [
+  { id: 1, tipo: 'Proposta', descricao: 'Proposta P-220 enviada para Clínica Vida Plena', quando: 'Hoje, 09:42' },
+  { id: 2, tipo: 'CRM', descricao: 'Novo contato agendado com Escola Horizonte', quando: 'Hoje, 08:15' },
+  { id: 3, tipo: 'Financeiro', descricao: 'Recebimento conciliado — R$ 18.450,00', quando: 'Ontem, 16:20' },
+  { id: 4, tipo: 'Operação', descricao: 'OS-1051 confirmada para execução', quando: 'Ontem, 14:08' },
+]
+
 export const proximasManutencoes = [
-  {
-    id: 'OS-1042',
-    cliente: 'Fazenda Santa Luz',
-    usina: 'Usina SL-12 kWp',
-    tipo: 'Limpeza de módulos',
-    data: '2026-09-30',
-    tecnico: 'Ana Souza',
-    status: 'Agendada',
-  },
-  {
-    id: 'OS-1048',
-    cliente: 'Mercado Bom Preço',
-    usina: 'Cobertura 45 kWp',
-    tipo: 'Manutenção preventiva',
-    data: '2026-10-02',
-    tecnico: 'Carlos Lima',
-    status: 'Agendada',
-  },
-  {
-    id: 'OS-1051',
-    cliente: 'Residencial Aurora',
-    usina: 'Telhado 8,2 kWp',
-    tipo: 'Limpeza de módulos',
-    data: '2026-10-03',
-    tecnico: 'Pedro Alves',
-    status: 'Confirmada',
-  },
-  {
-    id: 'OS-1055',
-    cliente: 'Clínica Vida Plena',
-    usina: 'Carport 28 kWp',
-    tipo: 'Inspeção elétrica',
-    data: '2026-10-07',
-    tecnico: 'Ana Souza',
-    status: 'Pendente',
-  },
-  {
-    id: 'OS-1059',
-    cliente: 'Indústria Vale Verde',
-    usina: 'Solo 180 kWp',
-    tipo: 'Manutenção preventiva',
-    data: '2026-10-10',
-    tecnico: 'Mariana Costa',
-    status: 'Agendada',
-  },
+  { id: 'OS-1042', cliente: 'Fazenda Santa Luz', usina: 'Usina SL-12 kWp', tipo: 'Limpeza de módulos', data: '2026-10-04', tecnico: 'Ana Souza', status: 'Agendada' },
+  { id: 'OS-1048', cliente: 'Mercado Bom Preço', usina: 'Cobertura 45 kWp', tipo: 'Manutenção preventiva', data: '2026-10-06', tecnico: 'Carlos Lima', status: 'Agendada' },
+  { id: 'OS-1051', cliente: 'Residencial Aurora', usina: 'Telhado 8,2 kWp', tipo: 'Limpeza de módulos', data: '2026-10-07', tecnico: 'Pedro Alves', status: 'Confirmada' },
+  { id: 'OS-1055', cliente: 'Clínica Vida Plena', usina: 'Carport 28 kWp', tipo: 'Inspeção elétrica', data: '2026-10-09', tecnico: 'Ana Souza', status: 'Pendente' },
 ]
 
 export const clientes = [
