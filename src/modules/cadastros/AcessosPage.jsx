@@ -1,5 +1,6 @@
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import { Check, Eye, KeyRound, Pencil, Plus, ShieldCheck, UserRound, UsersRound, X } from 'lucide-react'
+import { ArrowLeft, Check, Eye, KeyRound, Pencil, Plus, ShieldCheck, UserRound, UsersRound, X } from 'lucide-react'
 
 const modules = ['Cadastros', 'Comercial', 'CRM', 'Contratos', 'Financeiro', 'Estoque', 'Operações', 'Relatórios', 'Configurações']
 
@@ -69,7 +70,7 @@ export default function AcessosPage() {
         <h2 className="page-title">Configurações de Acesso</h2>
         <p className="page-subtitle">Usuários, grupos e perfis. O perfil define quais módulos o usuário pode acessar e se o acesso é de visualização, alteração ou total.</p>
       </div>
-      <button className="btn-primary" onClick={() => setModal(tab)}><Plus size={16}/> Novo {tab === 'usuarios' ? 'usuário' : tab === 'grupos' ? 'grupo' : 'perfil'}</button>
+      <div className="flex flex-wrap gap-2"><Link to="/configuracoes" className="btn-secondary"><ArrowLeft size={16}/> Configurações</Link><button className="btn-primary" onClick={() => setModal(tab)}><Plus size={16}/> Novo {tab === 'usuarios' ? 'usuário' : tab === 'grupos' ? 'grupo' : 'perfil'}</button></div>
     </header>
 
     <div className="grid gap-3 md:grid-cols-3">
