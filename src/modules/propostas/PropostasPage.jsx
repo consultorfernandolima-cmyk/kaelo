@@ -1,27 +1,23 @@
-import { ModulePlaceholder, StatusBadge, formatCurrency, formatDate } from '../../components/ui.jsx'
-import { propostas } from '../../data/mock.js'
+import { useMemo, useState } from 'react'
+import { FileText, Plus, Search, Eye, Printer } from 'lucide-react'
+import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
 
-const etapaTone = {
-  Enviada: 'navy',
-  'Em elaboração': 'slate',
-  Negociação: 'yellow',
-}
+const initial = [
+ {id:'P-220',cliente:'Clínica Vida Plena',tipo:'Prestação de serviço',objeto:'Limpeza e manutenção preventiva de sistema solar',valor:148900,etapa:'Enviada',validade:'15/10/2026'},
+ {id:'P-221',cliente:'Escola Horizonte',tipo:'Prestação de serviço',objeto:'Limpeza técnica de módulos fotovoltaicos',valor:312000,etapa:'Em elaboração',validade:'22/10/2026'},
+ {id:'P-218',cliente:'Condomínio Solar Park',tipo:'Prestação de serviço',objeto:'Plano anual de manutenção preventiva',valor:890500,etapa:'Negociação',validade:'05/10/2026'},
+]
+const tones={Enviada:'navy','Em elaboração':'slate',Negociação:'yellow'}
 
-export default function PropostasPage() {
-  return (
-    <ModulePlaceholder
-      title="Propostas"
-      description="Funil comercial simulado — valores e validade para o nível comercial."
-      columns={['Código', 'Cliente', 'Valor', 'Etapa', 'Validade']}
-      rows={propostas.map((p) => [
-        p.id,
-        p.cliente,
-        formatCurrency(p.valor),
-        <StatusBadge key={p.id} tone={etapaTone[p.etapa] ?? 'slate'}>
-          {p.etapa}
-        </StatusBadge>,
-        formatDate(p.validade),
-      ])}
-    />
-  )
+export default function PropostasPage(){
+ const [items,setItems]=useState(initial),[q,setQ]=useState(''),[modal,setModal]=useState(false),[view,setView]=useState(null)
+ const rows=useMemo(()=>items.filter(i=>Object.values(i).some(v=>String(v).toLowerCase().includes(q.toLowerCase()))),[items,q])
+ function save(e){e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget));const item={id:`P-${String(items.length+220).padStart(3,'0')}`,...v,valor:Number(v.valor||0)};setItems(x=>[...x,item]);setModal(false);setView(item)}
+ return <section className="space-y-5">
+  <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Comercial</p><h2 className="page-title">Propostas</h2><p className="page-subtitle">Criação e apresentação de propostas de prestação de serviços.</p></div><div className="flex gap-2"><div className="relative"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/><input className="input pl-9" placeholder="Pesquisar cliente, proposta ou serviço..." value={q} onChange={e=>setQ(e.target.value)}/></div><button className="btn-primary" onClick={()=>setModal(true)}><Plus size={16}/> Nova proposta</button></div></header>
+  <div className="grid gap-4 md:grid-cols-3">{['Em elaboração','Enviada','Negociação'].map(s=><div key={s} className="surface-card p-4"><p className="text-xs text-slate-500">{s}</p><p className="mt-1 text-xl font-bold text-navy-900">{rows.filter(i=>i.etapa===s).length}</p><p className="mt-1 text-xs text-slate-400">{formatCurrency(rows.filter(i=>i.etapa===s).reduce((a,i)=>a+i.valor,0))}</p></div>)}</div>
+  <div className="surface-card overflow-hidden"><div className="overflow-x-auto"><table className="data-table"><thead><tr><th>Código</th><th>Cliente</th><th>Tipo</th><th>Objeto</th><th>Valor</th><th>Etapa</th><th>Validade</th><th>Ações</th></tr></thead><tbody>{rows.map(i=><tr key={i.id}><td className="font-medium">{i.id}</td><td>{i.cliente}</td><td>{i.tipo}</td><td>{i.objeto}</td><td>{formatCurrency(i.valor)}</td><td><StatusBadge tone={tones[i.etapa]||'slate'}>{i.etapa}</StatusBadge></td><td>{i.validade}</td><td><button className="text-xs font-semibold text-navy-800 hover:underline" onClick={()=>setView(i)}><Eye size={14} className="mr-1 inline"/>Visualizar</button></td></tr>)}</tbody></table></div></div>
+  {modal&&<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4"><form onSubmit={save} className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-navy-900/5"><FileText size={19}/></div><div><h3 className="text-lg font-semibold text-navy-900">Nova proposta</h3><p className="text-xs text-slate-500">Prestação de serviço</p></div></div><div className="mt-5 grid gap-4 md:grid-cols-2"><label className="field md:col-span-2"><span>Cliente</span><input name="cliente" className="input" required/></label><label className="field"><span>Tipo</span><select name="tipo" className="input"><option>Prestação de serviço</option><option>Fornecimento e serviço</option><option>Manutenção</option></select></label><label className="field"><span>Valor total</span><input name="valor" type="number" className="input" required/></label><label className="field md:col-span-2"><span>Objeto da proposta</span><input name="objeto" className="input" placeholder="Ex.: Limpeza de módulos fotovoltaicos" required/></label><label className="field"><span>Etapa</span><select name="etapa" className="input"><option>Em elaboração</option><option>Enviada</option><option>Negociação</option></select></label><label className="field"><span>Validade</span><input name="validade" type="date" className="input" required/></label></div><div className="mt-6 flex justify-end gap-2"><button type="button" className="btn-secondary" onClick={()=>setModal(false)}>Cancelar</button><button className="btn-primary">Criar proposta</button></div></form></div>}
+  {view&&<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4"><article className="w-full max-w-3xl rounded-2xl bg-white shadow-xl"><div className="border-b border-slate-200 p-6"><div className="flex items-start justify-between"><div><p className="text-xs uppercase tracking-wider text-solar-green">Kaelo ERP · Proposta comercial</p><h3 className="mt-1 text-2xl font-bold text-navy-900">{view.id}</h3><p className="mt-1 text-sm text-slate-500">{view.cliente}</p></div><button className="btn-secondary" onClick={()=>setView(null)}>Fechar</button></div></div><div className="space-y-5 p-6"><div className="grid gap-4 md:grid-cols-3"><div><p className="text-xs text-slate-500">Tipo</p><p className="mt-1 font-semibold">{view.tipo}</p></div><div><p className="text-xs text-slate-500">Valor</p><p className="mt-1 font-semibold">{formatCurrency(view.valor)}</p></div><div><p className="text-xs text-slate-500">Validade</p><p className="mt-1 font-semibold">{view.validade}</p></div></div><div className="rounded-xl border border-slate-200 p-5"><p className="text-xs uppercase tracking-wider text-slate-400">Objeto</p><p className="mt-2 text-base text-navy-900">{view.objeto}</p></div><div className="rounded-xl bg-slate-50 p-5"><p className="text-sm font-semibold text-navy-900">Prestação de serviço</p><p className="mt-2 text-sm leading-6 text-slate-600">Documento demonstrativo preparado para validação visual. O conteúdo comercial, condições, escopo, periodicidade e valores detalhados serão refinados na próxima etapa.</p></div><button className="btn-primary" onClick={()=>window.print()}><Printer size={16}/> Imprimir / PDF</button></div></article></div>}
+ </section>
 }
