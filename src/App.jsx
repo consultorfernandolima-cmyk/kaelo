@@ -10,6 +10,7 @@ import CadastrosPage from './modules/cadastros/CadastrosPage.jsx'
 import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
 import ProdutosPage from './modules/cadastros/ProdutosPage.jsx'
 import AcessosPage from './modules/cadastros/AcessosPage.jsx'
+import ConfiguracoesPage from './modules/configuracoes/ConfiguracoesPage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
 
 const modulePages = {
@@ -19,7 +20,7 @@ const modulePages = {
   '/estoque': ['Estoque', 'Produtos, depósitos, movimentos e saldos operacionais.', 'Estoque'],
   '/operacoes': ['Operações', 'Ordens, serviços, agenda e execução operacional.', 'Operações'],
   '/relatorios': ['Relatórios', 'Indicadores e relatórios por empresa, período e permissão.', 'Gestão'],
-  '/configuracoes': ['Configurações', 'Organização, empresas, usuários, parâmetros e integrações.', 'Administração'],
+  '/configuracoes': ['Configurações', 'Organização, empresas, parâmetros e integrações e controle de acesso.', 'Administração'],
 }
 
 export default function App() {
@@ -31,7 +32,8 @@ export default function App() {
         <Route path="/clientes" element={<ClientesPage />} />
         <Route path="/cadastros/grupos-familias" element={<GruposFamiliasPage />} />
         <Route path="/cadastros/produtos" element={<ProdutosPage />} />
-        <Route path="/cadastros/acessos" element={<AcessosPage />} />
+        <Route path="/configuracoes/acessos" element={<AcessosPage />} />
+        <Route path="/cadastros/acessos" element={<Navigate to="/configuracoes/acessos" replace />} />
         <Route path="/usinas" element={<UsinasPage />} />
         <Route path="/usinas/cadastro" element={<UsinaCadastroPage />} />
         <Route path="/propostas" element={<PropostasPage />} />
