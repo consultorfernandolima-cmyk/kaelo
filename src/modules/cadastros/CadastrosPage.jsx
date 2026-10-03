@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Building2, Package, UsersRound, ShieldCheck, UserRound, Layers3 } from 'lucide-react'
+import { ArrowRight, Building2, Package, UsersRound, ShieldCheck, UserRound, Layers3, KeyRound } from 'lucide-react'
 
 const cards = [
   { title: 'Parceiros', description: 'Clientes, fornecedores e demais relações comerciais.', path: '/clientes', icon: Building2, status: 'Em validação' },
   { title: 'Produtos e serviços', description: 'Itens comercializados, serviços e classificação de produtos.', path: '/cadastros/produtos', icon: Package, status: 'Próxima etapa' },
   { title: 'Grupos e famílias', description: 'Estrutura de classificação que organizará produtos e serviços.', path: '/cadastros/grupos-familias', icon: Layers3, status: 'Próxima etapa' },
+  { title: 'Acessos', description: 'Usuários, grupos e perfis com módulos e níveis de permissão.', path: '/cadastros/acessos', icon: KeyRound, status: 'Em validação' },
   { title: 'Usuários', description: 'Usuários do ambiente e seus vínculos de acesso.', path: '/cadastros/usuarios', icon: UserRound, status: 'Planejado' },
   { title: 'Grupos de usuários', description: 'Agrupamento operacional: Administrador, Vendas, Operações, Financeiro etc.', path: '/cadastros/grupos-usuarios', icon: UsersRound, status: 'Planejado' },
   { title: 'Perfis de acesso', description: 'Módulos e níveis de permissão: visualização, alteração ou acesso total.', path: '/cadastros/perfis', icon: ShieldCheck, status: 'Planejado' },
