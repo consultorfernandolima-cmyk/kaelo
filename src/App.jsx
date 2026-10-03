@@ -5,6 +5,9 @@ import ClientesPage from './modules/clientes/ClientesPage.jsx'
 import UsinasPage from './modules/usinas/UsinasPage.jsx'
 import UsinaCadastroPage from './modules/usinas/UsinaCadastroPage.jsx'
 import PropostasPage from './modules/propostas/PropostasPage.jsx'
+import CRMPage from './modules/crm/CRMPage.jsx'
+import RelatoriosPage from './modules/relatorios/RelatoriosPage.jsx'
+import ContratosPage from './modules/contratos/ContratosPage.jsx'
 import OrdensServicoPage from './modules/ordens-servico/OrdensServicoPage.jsx'
 import CadastrosPage from './modules/cadastros/CadastrosPage.jsx'
 import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
@@ -15,11 +18,10 @@ import ModulePage from './modules/shared/ModulePage.jsx'
 
 const modulePages = {
   '/crm': ['CRM', 'Funil comercial, oportunidades, atividades e próximos contatos.', 'Comercial'],
-  '/contratos': ['Contratos', 'Contratos, versões, documentos e histórico comercial.', 'Comercial'],
   '/financeiro': ['Financeiro', 'Contas a pagar, receber, lançamentos e conciliação.', 'Financeiro'],
   '/estoque': ['Estoque', 'Produtos, depósitos, movimentos e saldos operacionais.', 'Estoque'],
   '/operacoes': ['Operações', 'Ordens, serviços, agenda e execução operacional.', 'Operações'],
-  '/relatorios': ['Relatórios', 'Indicadores e relatórios por empresa, período e permissão.', 'Gestão'],
+
   '/configuracoes': ['Configurações', 'Organização, empresas, parâmetros e integrações e controle de acesso.', 'Administração'],
 }
 
@@ -37,6 +39,9 @@ export default function App() {
         <Route path="/usinas" element={<UsinasPage />} />
         <Route path="/usinas/cadastro" element={<UsinaCadastroPage />} />
         <Route path="/propostas" element={<PropostasPage />} />
+        <Route path="/crm" element={<CRMPage />} />
+        <Route path="/contratos" element={<ContratosPage />} />
+        <Route path="/relatorios" element={<RelatoriosPage />} />
         <Route path="/ordens-servico" element={<OrdensServicoPage />} />
         {Object.entries(modulePages).map(([path, [title, description, eyebrow]]) => (
           <Route key={path} path={path} element={<ModulePage title={title} description={description} eyebrow={eyebrow} />} />
