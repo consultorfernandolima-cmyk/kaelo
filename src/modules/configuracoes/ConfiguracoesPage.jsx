@@ -11,7 +11,7 @@ export default function ConfiguracoesPage() {
       </header>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Link to="/cadastros/acessos" className="surface-card group p-5 transition hover:-translate-y-0.5 hover:shadow-md">
+        <Link to="/configuracoes/acessos" className="surface-card group p-5 transition hover:-translate-y-0.5 hover:shadow-md">
           <div className="flex items-start justify-between">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-navy-900/5 text-navy-800">
               <KeyRound size={19} />
