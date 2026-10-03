@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { Plus, Search, Layers3, FolderTree } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowLeft, Plus, Search, Layers3, FolderTree } from 'lucide-react'
 
 const initialGroups = [
   { id: 1, name: 'Materiais elétricos', description: 'Materiais e componentes para instalações elétricas.', families: 2, active: true },
@@ -38,7 +39,7 @@ export default function GruposFamiliasPage() {
   return <section className="space-y-5">
     <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Cadastros</p><h2 className="page-title">Grupos e famílias</h2><p className="page-subtitle">Classificação básica para organizar produtos e serviços.</p></div>
-      <button onClick={() => setModal(tab)} className="btn-primary"><Plus size={16}/> Novo {tab === 'grupos' ? 'grupo' : 'família'}</button>
+      <div className="flex flex-wrap gap-2"><Link to="/cadastros/produtos" className="btn-secondary"><ArrowLeft size={16}/> Produtos e serviços</Link><button onClick={() => setModal(tab)} className="btn-primary"><Plus size={16}/> Novo {tab === 'grupos' ? 'grupo' : 'família'}</button></div>
     </header>
     <div className="surface-card overflow-hidden">
       <div className="flex flex-col gap-3 border-b border-slate-200 p-4 md:flex-row md:items-center md:justify-between">
