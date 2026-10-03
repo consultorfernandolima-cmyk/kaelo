@@ -18,7 +18,10 @@ const groups = [
   },
   {
     label: 'Cadastros',
-    items: [{ to: '/clientes', label: 'Parceiros', icon: Users }],
+    items: [
+      { to: '/cadastros', label: 'Cadastros', icon: ClipboardList, end: true },
+      { to: '/clientes', label: 'Parceiros', icon: Users },
+    ],
   },
   {
     label: 'Comercial',
