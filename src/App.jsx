@@ -9,6 +9,7 @@ import OrdensServicoPage from './modules/ordens-servico/OrdensServicoPage.jsx'
 import CadastrosPage from './modules/cadastros/CadastrosPage.jsx'
 import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
 import ProdutosPage from './modules/cadastros/ProdutosPage.jsx'
+import AcessosPage from './modules/cadastros/AcessosPage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
 
 const modulePages = {
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/clientes" element={<ClientesPage />} />
         <Route path="/cadastros/grupos-familias" element={<GruposFamiliasPage />} />
         <Route path="/cadastros/produtos" element={<ProdutosPage />} />
+        <Route path="/cadastros/acessos" element={<AcessosPage />} />
         <Route path="/usinas" element={<UsinasPage />} />
         <Route path="/usinas/cadastro" element={<UsinaCadastroPage />} />
         <Route path="/propostas" element={<PropostasPage />} />
