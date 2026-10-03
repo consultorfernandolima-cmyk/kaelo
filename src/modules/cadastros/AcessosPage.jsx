@@ -65,8 +65,8 @@ export default function AcessosPage() {
   return <section className="space-y-5">
     <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Cadastros</p>
-        <h2 className="page-title">Acessos</h2>
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Configurações</p>
+        <h2 className="page-title">Configurações de Acesso</h2>
         <p className="page-subtitle">Usuários, grupos e perfis. O perfil define quais módulos o usuário pode acessar e se o acesso é de visualização, alteração ou total.</p>
       </div>
       <button className="btn-primary" onClick={() => setModal(tab)}><Plus size={16}/> Novo {tab === 'usuarios' ? 'usuário' : tab === 'grupos' ? 'grupo' : 'perfil'}</button>
