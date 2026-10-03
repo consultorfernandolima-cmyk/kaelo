@@ -30,13 +30,15 @@ export const proximasManutencoes = [
   { id: 'OS-1055', cliente: 'Clínica Vida Plena', usina: 'Carport 28 kWp', tipo: 'Inspeção elétrica', data: '2026-10-09', tecnico: 'Ana Souza', status: 'Pendente' },
 ]
 
-export const clientes = [
-  { id: 'C-001', nome: 'Fazenda Santa Luz', cidade: 'Uberaba/MG', usinas: 2, status: 'Ativo' },
-  { id: 'C-002', nome: 'Mercado Bom Preço', cidade: 'Ribeirão Preto/SP', usinas: 1, status: 'Ativo' },
-  { id: 'C-003', nome: 'Residencial Aurora', cidade: 'Campinas/SP', usinas: 1, status: 'Ativo' },
-  { id: 'C-004', nome: 'Clínica Vida Plena', cidade: 'Goiânia/GO', usinas: 1, status: 'Prospecto' },
-  { id: 'C-005', nome: 'Indústria Vale Verde', cidade: 'Londrina/PR', usinas: 3, status: 'Ativo' },
+export const parceiros = [
+  { id: 'P-001', nome: 'Fazenda Santa Luz', tipo: 'PJ', documento: '12.345.678/0001-90', email: 'financeiro@santaluz.com.br', telefone: '(34) 3333-1010', cidade: 'Uberaba', uf: 'MG', cliente: true, fornecedor: false, status: 'Ativo' },
+  { id: 'P-002', nome: 'Mercado Bom Preço', tipo: 'PJ', documento: '23.456.789/0001-01', email: 'compras@bompreco.com.br', telefone: '(16) 3222-2040', cidade: 'Ribeirão Preto', uf: 'SP', cliente: true, fornecedor: false, status: 'Ativo' },
+  { id: 'P-003', nome: 'Distribuidora Sol Nascente', tipo: 'PJ', documento: '34.567.890/0001-12', email: 'vendas@solnascente.com.br', telefone: '(11) 3010-8899', cidade: 'São Paulo', uf: 'SP', cliente: false, fornecedor: true, status: 'Ativo' },
+  { id: 'P-004', nome: 'Clínica Vida Plena', tipo: 'PJ', documento: '45.678.901/0001-23', email: 'administrativo@vidaplena.com.br', telefone: '(62) 3444-5500', cidade: 'Goiânia', uf: 'GO', cliente: true, fornecedor: false, status: 'Ativo' },
+  { id: 'P-005', nome: 'Carlos Eduardo Mendes', tipo: 'PF', documento: '456.789.123-00', email: 'carlos.mendes@email.com', telefone: '(19) 98888-2211', cidade: 'Campinas', uf: 'SP', cliente: true, fornecedor: false, status: 'Ativo' },
 ]
+
+export const clientes = parceiros.filter((item) => item.cliente)
 
 export const usinas = [
   { id: 'U-12', nome: 'Usina SL-12 kWp', cliente: 'Fazenda Santa Luz', potenciaKwp: 12, status: 'Operando' },
