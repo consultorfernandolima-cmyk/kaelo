@@ -7,6 +7,8 @@ import UsinaCadastroPage from './modules/usinas/UsinaCadastroPage.jsx'
 import PropostasPage from './modules/propostas/PropostasPage.jsx'
 import OrdensServicoPage from './modules/ordens-servico/OrdensServicoPage.jsx'
 import CadastrosPage from './modules/cadastros/CadastrosPage.jsx'
+import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
+import ProdutosPage from './modules/cadastros/ProdutosPage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
 
 const modulePages = {
@@ -26,6 +28,8 @@ export default function App() {
         <Route path="/" element={<DashboardPage />} />
         <Route path="/cadastros" element={<CadastrosPage />} />
         <Route path="/clientes" element={<ClientesPage />} />
+        <Route path="/cadastros/grupos-familias" element={<GruposFamiliasPage />} />
+        <Route path="/cadastros/produtos" element={<ProdutosPage />} />
         <Route path="/usinas" element={<UsinasPage />} />
         <Route path="/usinas/cadastro" element={<UsinaCadastroPage />} />
         <Route path="/propostas" element={<PropostasPage />} />
