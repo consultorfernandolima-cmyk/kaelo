@@ -78,7 +78,7 @@ export default function RelatorioConsumoGeracaoPage() {
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
-        <section className="rounded-2xl border border-slate-300 p-5"><h2 className="text-center text-lg font-bold text-slate-500">Dados Consumo</h2><div className="mt-2 grid grid-cols-2 gap-3"><Bar value={report.rede} label="Rede" max={400}/><Bar value={-425.19276} label="Usina Solar" max={600}/></div><div className="mt-3 grid grid-cols-2 text-center text-xs font-semibold"><span>Energia Consumida<br/>vinda da Usina Solar</span><span>Energia Consumida<br/>vinda da Rede</span></div></section>
+        <section className="rounded-2xl border border-slate-300 p-5"><h2 className="text-center text-lg font-bold text-slate-500">Dados Consumo</h2><div className="mt-2 grid grid-cols-2 gap-3"><Bar value={report.rede} label="Rede" max={400}/><Bar value={report.consumoTotal - report.rede} label="Usina Solar" max={600}/></div><div className="mt-3 grid grid-cols-2 text-center text-xs font-semibold"><span>Energia Consumida<br/>vinda da Usina Solar</span><span>Energia Consumida<br/>vinda da Rede</span></div></section>
         <section className="rounded-2xl border border-slate-300 p-5"><h2 className="text-center text-lg font-bold text-slate-500">Dados Geração</h2><div className="mt-2 grid grid-cols-2 gap-3"><Bar value={report.geracao} label="Geração Total" max={1400}/><Bar value={report.injetada} label="Energia Injetada" max={1400}/></div></section>
       </div>
 
