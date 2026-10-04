@@ -2,14 +2,16 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Layers3, Plus, Search } from 'lucide-react'
 
-const groups = ['Materiais elétricos', 'Serviços', 'Equipamentos']
-const families = ['Cabos e condutores', 'Proteção elétrica', 'Instalação elétrica', 'Equipamentos solares']
+const groups = ['Manutenção', 'Limpeza', 'Monitoramento', 'Materiais elétricos', 'Equipamentos']
+const families = ['Preventiva', 'Corretiva', 'Módulos', 'Desempenho', 'Cabos e condutores', 'Proteção elétrica', 'Equipamentos solares']
 const initial = [
  {id:1,type:'Produto',code:'PROD-001',name:'Cabo solar 6mm',family:'Cabos e condutores',unit:'m',price:'8,90',active:true},
  {id:2,type:'Produto',code:'PROD-002',name:'Disjuntor bipolar 40A',family:'Proteção elétrica',unit:'un',price:'54,90',active:true},
  {id:3,type:'Produto',code:'PROD-003',name:'Kit de instalação solar',family:'Equipamentos solares',unit:'kit',price:'450,00',active:true},
- {id:4,type:'Serviço',code:'SERV-001',name:'Instalação elétrica',family:'Instalação elétrica',unit:'serviço',price:'350,00',active:true},
- {id:5,type:'Serviço',code:'SERV-002',name:'Manutenção elétrica',family:'Instalação elétrica',unit:'serviço',price:'220,00',active:true},
+ {id:4,type:'Serviço',code:'SERV-001',name:'Inspeção preventiva da usina',family:'Preventiva',unit:'serviço',price:'0,00',active:true},
+ {id:5,type:'Serviço',code:'SERV-002',name:'Manutenção corretiva',family:'Corretiva',unit:'serviço',price:'0,00',active:true},
+ {id:6,type:'Serviço',code:'SERV-003',name:'Limpeza dos módulos fotovoltaicos',family:'Módulos',unit:'serviço',price:'0,00',active:true},
+ {id:7,type:'Serviço',code:'SERV-004',name:'Relatório mensal de desempenho',family:'Desempenho',unit:'serviço',price:'0,00',active:true},
 ]
 export default function ProdutosPage(){
  const [items,setItems]=useState(initial),[q,setQ]=useState(''),[modal,setModal]=useState(false)
