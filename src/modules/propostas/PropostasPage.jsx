@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Eye, Plus, Printer, Search, ShieldCheck, Sun, Calculator, AlertTriangle } from 'lucide-react'
 import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
-import { calcHybrid, calcOnGrid } from './dimensionamento.js'
+import { calcHybrid, calcHybridFromLoads, calcOnGrid } from './dimensionamento.js'
 
 const initial = [
  {id:'P-220',cliente:'Clínica Vida Plena',modelo:'Integrador',tipoProjeto:'On-grid',tipo:'Energia Solar',objeto:'Implantação de sistema fotovoltaico com fornecimento e instalação',valor:148900,etapa:'Enviada',validade:'15/10/2026'},
@@ -25,10 +25,13 @@ export default function PropostasPage(){
  const [dimensionType,setDimensionType]=useState('On-grid')
  const [onGrid,setOnGrid]=useState({consumoMensal:900,hsp:5.2,performanceRatio:81,potenciaModuloWp:550})
  const [hybrid,setHybrid]=useState({objetivo:'backup',energiaDiaria:12.84,potenciaCriticaKw:1.6,potenciaPicoKva:3.77,duracaoHoras:8,autonomiaDias:1,dod:90,eficiencia:95,degradacao:0,margem:10,bateriaNominalKwh:5.8,bateriaPotenciaKw:2.8,inversorPotenciaKva:5})
+ const [useLoads,setUseLoads]=useState(false)
+ const [loads,setLoads]=useState([])
  const model=modelInfo[licenseType]
  const rows=useMemo(()=>items.filter(i=>Object.values(i).some(v=>String(v).toLowerCase().includes(q.toLowerCase()))),[items,q])
  const onGridResult=calcOnGrid(onGrid)
- const hybridResult=calcHybrid(hybrid)
+ const loadResult=calcHybridFromLoads({loads,backupHours:hybrid.duracaoHoras})
+ const hybridResult=calcHybrid({...hybrid,...(useLoads?{energiaNecessariaOverride:hybrid.objetivo==='backup'?loadResult.criticalEnergy:loadResult.dailyEnergy,potenciaCriticaKw:loadResult.criticalPower,potenciaPicoOverride:Math.max(hybrid.potenciaPicoKva,loadResult.connectedPeak)}:{})})
 
  function save(e){
   e.preventDefault()
@@ -39,6 +42,9 @@ export default function PropostasPage(){
 
  function updateOnGrid(name,value){setOnGrid(x=>({...x,[name]:value}))}
  function updateHybrid(name,value){setHybrid(x=>({...x,[name]:value}))}
+ function addLoad(){setLoads(x=>[...x,{name:'Nova carga',powerKw:'',hoursPerDay:'',simultaneity:1,critical:true}])}
+ function updateLoad(index,name,value){setLoads(x=>x.map((load,i)=>i===index?{...load,[name]:value}:load))}
+ function removeLoad(index){setLoads(x=>x.filter((_,i)=>i!==index))}
 
  return <section className="space-y-5">
   <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -147,6 +153,30 @@ export default function PropostasPage(){
      </div>}
      {dimensionType==='Híbrido' && <div className="mt-5 space-y-5">
       <div className="rounded-xl border border-blue-200 bg-blue-50 p-4"><p className="text-sm font-semibold text-blue-900">Pré-dimensionamento híbrido</p><p className="mt-1 text-xs leading-5 text-blue-800">O Kaelo separa energia (kWh) de potência (kW/kVA), considera DoD, eficiência, degradação e margem. A validação final ainda depende do perfil horário, fabricante, compatibilidade e requisitos da distribuidora.</p></div>
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+         <p className="text-sm font-semibold text-navy-900">Perfil de cargas críticas</p>
+         <p className="mt-1 text-xs leading-5 text-slate-500">Quando houver dados de cargas, o Kaelo pode calcular a energia do backup pela carga crítica, em vez de usar apenas potência × horas.</p>
+        </div>
+        <label className="flex items-center gap-2 text-xs font-semibold text-slate-700"><input type="checkbox" checked={useLoads} onChange={e=>{setUseLoads(e.target.checked);if(e.target.checked&&!loads.length)setLoads([{name:'Carga crítica',powerKw:'',hoursPerDay:8,simultaneity:1,critical:true}])}}/> Usar perfil de cargas</label>
+       </div>
+       {useLoads && <div className="mt-4 space-y-3">
+        {loads.map((load,index)=><div key={index} className="grid gap-2 rounded-xl border border-slate-200 bg-white p-3 md:grid-cols-[1.6fr_1fr_1fr_1fr_auto] md:items-end">
+         <label className="field"><span>Carga</span><input className="input" value={load.name} onChange={e=>updateLoad(index,'name',e.target.value)}/></label>
+         <label className="field"><span>Potência (kW)</span><input type="number" step="any" className="input" value={load.powerKw} onChange={e=>updateLoad(index,'powerKw',e.target.value)}/></label>
+         <label className="field"><span>Horas/dia</span><input type="number" step="any" className="input" value={load.hoursPerDay} onChange={e=>updateLoad(index,'hoursPerDay',e.target.value)}/></label>
+         <label className="field"><span>Simultaneidade</span><input type="number" step="0.01" min="0" max="1" className="input" value={load.simultaneity} onChange={e=>updateLoad(index,'simultaneity',e.target.value)}/></label>
+         <div className="flex items-center gap-2 pb-0.5"><label className="flex items-center gap-2 whitespace-nowrap text-xs"><input type="checkbox" checked={load.critical} onChange={e=>updateLoad(index,'critical',e.target.checked)}/> Crítica</label><button type="button" className="btn-secondary" onClick={()=>removeLoad(index)}>Remover</button></div>
+        </div>)}
+        <button type="button" className="btn-secondary" onClick={addLoad}>+ Adicionar carga</button>
+        <div className="grid gap-3 md:grid-cols-3">
+         <div className="rounded-xl border border-slate-200 bg-white p-3"><p className="text-xs text-slate-500">Energia diária pelas cargas</p><p className="mt-1 font-bold text-navy-900">{num(loadResult.dailyEnergy)} kWh/dia</p></div>
+         <div className="rounded-xl border border-slate-200 bg-white p-3"><p className="text-xs text-slate-500">Energia crítica no backup</p><p className="mt-1 font-bold text-navy-900">{num(loadResult.criticalEnergy)} kWh</p></div>
+         <div className="rounded-xl border border-slate-200 bg-white p-3"><p className="text-xs text-slate-500">Potência crítica</p><p className="mt-1 font-bold text-navy-900">{num(loadResult.criticalPower)} kW</p></div>
+        </div>
+       </div>}
+      </div>
       <div className="grid gap-4 md:grid-cols-4">
        <label className="field"><span>Objetivo</span><select className="input" value={hybrid.objetivo} onChange={e=>updateHybrid('objetivo',e.target.value)}><option value="backup">Backup</option><option value="peak-shaving">Peak shaving</option><option value="autoconsumo">Autoconsumo</option></select></label>
        <label className="field"><span>Energia diária (kWh)</span><input type="number" step="any" className="input" value={hybrid.energiaDiaria} onChange={e=>updateHybrid('energiaDiaria',e.target.value)}/></label>
@@ -162,7 +192,7 @@ export default function PropostasPage(){
        <label className="field"><span>Potência por bateria (kW)</span><input type="number" step="any" className="input" value={hybrid.bateriaPotenciaKw} onChange={e=>updateHybrid('bateriaPotenciaKw',e.target.value)}/></label>
       </div>
       <div className="grid gap-4 md:grid-cols-4">
-       <div className="surface-card p-4"><p className="text-xs text-slate-500">Energia a cobrir</p><p className="mt-1 text-xl font-bold text-navy-900">{num(hybridResult.energiaBase)} kWh</p></div>
+       <div className="surface-card p-4"><p className="text-xs text-slate-500">Energia a cobrir</p><p className="mt-1 text-xl font-bold text-navy-900">{num(hybridResult.energiaNecessaria)} kWh</p></div>
        <div className="surface-card p-4"><p className="text-xs text-slate-500">Capacidade nominal</p><p className="mt-1 text-xl font-bold text-navy-900">{num(hybridResult.capacidadeNominal)} kWh</p></div>
        <div className="surface-card p-4"><p className="text-xs text-slate-500">Baterias</p><p className="mt-1 text-xl font-bold text-navy-900">{hybridResult.qtdBaterias} × {num(hybrid.bateriaNominalKwh)} kWh</p></div>
        <div className="surface-card p-4"><p className="text-xs text-slate-500">Potência de bateria</p><p className="mt-1 text-xl font-bold text-navy-900">{num(hybridResult.potenciaBateriaDisponivel)} kW</p></div>
@@ -171,7 +201,7 @@ export default function PropostasPage(){
        <div className={`rounded-xl border p-4 ${hybridResult.bateriaAtendePotencia?'border-emerald-200 bg-emerald-50':'border-red-200 bg-red-50'}`}><p className="text-sm font-semibold">Potência das baterias</p><p className="mt-1 text-xs">Necessário: {num(Math.max(hybrid.potenciaCriticaKw,hybrid.potenciaPicoKva))} kW/kVA · Disponível: {num(hybridResult.potenciaBateriaDisponivel)} kW</p><p className="mt-2 text-xs font-semibold">{hybridResult.bateriaAtendePotencia?'Atende a premissa de potência.':'Não atende a premissa de potência; revisar banco/inversor.'}</p></div>
        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-sm font-semibold text-navy-900">Compatibilidade final</p><p className="mt-1 text-xs leading-5 text-slate-600">Antes de fechar a proposta, validar tensão, faixa de operação, corrente, potência de carga/descarga, BMS/comunicação, homologação/registro aplicável e compatibilidade entre inversor e bateria.</p></div>
       </div>
-      <div className="rounded-xl border border-slate-200 p-4 text-sm text-slate-600">Base técnica do pré-cálculo: energia e potência são dimensionadas separadamente; a capacidade nominal é ajustada por DoD, eficiência, degradação e margem. A próxima evolução será importar curva de carga/geração de 24 h ou 8760 h para simulação energética.</div>
+      <div className="rounded-xl border border-slate-200 p-4 text-sm text-slate-600">Base técnica do pré-cálculo: energia e potência são dimensionadas separadamente; a capacidade nominal é ajustada por DoD, eficiência, degradação e margem. Com o perfil de cargas ativo, a energia de backup passa a ser calculada pelas cargas críticas e suas horas de operação. A próxima evolução será importar curva de carga/geração de 24 h ou 8760 h para simulação energética.</div>
      </div>}
      {dimensionType==='Off-grid' && <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-5"><p className="flex items-center gap-2 font-semibold text-amber-900"><AlertTriangle size={17}/> Off-grid em stand-by</p><p className="mt-2 text-sm leading-6 text-amber-800">Nesta versão o Kaelo não fecha o dimensionamento automático off-grid. A proposta poderá registrar consumo, cargas, autonomia desejada, localização e observações para estudo posterior.</p></div>}
     </div>
