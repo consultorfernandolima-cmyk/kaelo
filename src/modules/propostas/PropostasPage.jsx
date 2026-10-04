@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Eye, Plus, Printer, Search, ShieldCheck, Sun, Calculator, AlertTriangle } from 'lucide-react'
 import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
 import { calcHybrid, calcHybridFromLoads, calcOnGrid, calcPriceFormation } from './dimensionamento.js'
@@ -19,6 +20,7 @@ const money = value => formatCurrency(Number(value || 0))
 const num = value => Number(value || 0).toLocaleString('pt-BR',{maximumFractionDigits:2})
 
 export default function PropostasPage(){
+ const navigate=useNavigate()
  const [items,setItems]=useState(initial),[q,setQ]=useState(''),[modal,setModal]=useState(false),[view,setView]=useState(null)
  const [licenseType,setLicenseType]=useState('Integrador')
  const [projectType,setProjectType]=useState('On-grid')
@@ -143,7 +145,7 @@ export default function PropostasPage(){
     {view.formacaoPreco&&<div className="rounded-xl border border-slate-200 p-5"><p className="text-xs uppercase tracking-wider text-slate-400">Formação de preço</p><div className="mt-3 grid gap-3 md:grid-cols-4"><div><p className="text-xs text-slate-500">Kit</p><p className="font-semibold">{money(view.formacaoPreco.kit)}</p></div><div><p className="text-xs text-slate-500">Custos diretos</p><p className="font-semibold">{money(view.formacaoPreco.custoDireto)}</p></div><div><p className="text-xs text-slate-500">Base antes da margem</p><p className="font-semibold">{money(view.formacaoPreco.baseAntesMargem)}</p></div><div><p className="text-xs text-slate-500">Preço calculado</p><p className="font-semibold text-solar-green">{money(view.formacaoPreco.precoVenda)}</p></div></div><p className="mt-3 text-xs text-slate-500">Composição registrada junto à proposta para posterior uso na geração do contrato.</p></div>}
     <div className="rounded-xl bg-slate-50 p-5"><p className="text-sm font-semibold text-navy-900">{view.modelo==='Integrador'?'Escopo do integrador':'Escopo de Serviços O&M'}</p><div className="mt-3 flex flex-wrap gap-2">{modelInfo[view.modelo].services.map(s=><span key={s} className="rounded-full bg-white px-3 py-1.5 text-xs text-slate-600 ring-1 ring-slate-200">{s}</span>)}</div></div>
     <div className="rounded-xl border border-amber-200 bg-amber-50 p-4"><p className="text-sm font-semibold text-amber-900">Documento demonstrativo</p><p className="mt-1 text-sm leading-6 text-amber-800">Estrutura preparada para validação visual. O conteúdo comercial, condições, escopo detalhado e composição de preços serão refinados antes da integração com a licença e o banco de dados.</p></div>
-    <button className="btn-primary" onClick={()=>window.print()}><Printer size={16}/> Imprimir / PDF</button>
+    <div className="flex flex-wrap gap-2"><button className="btn-secondary" onClick={()=>window.print()}><Printer size={16}/> Imprimir / PDF</button>{view.modelo==='Integrador' && view.etapa==='Enviada' && <button className="btn-primary" onClick={()=>navigate('/contratos',{state:{proposal:view}})}>Gerar contrato</button>}</div>
    </div>
   </article></div>}
 
