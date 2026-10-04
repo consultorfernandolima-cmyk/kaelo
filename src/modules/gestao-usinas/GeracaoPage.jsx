@@ -80,7 +80,7 @@ export default function GeracaoPage() {
       </div>
       <div className="flex flex-wrap gap-2">
         <button className="btn-secondary" onClick={() => window.print()}><Printer size={16}/> Imprimir / PDF</button>
-        <Link className="btn-secondary" to="/gestao-usinas/relatorio-consumo"><FileText size={16}/> Ver relatório</Link>
+        <Link className="btn-secondary" to="/gestao-usinas/relatorio-consumo" state={{record:selected}}><FileText size={16}/> Ver relatório</Link>
         <button className="btn-primary" onClick={() => { setForm({periodo:'2026-10', inversor:'Fronius', modulos:24, potenciaWp:330, inversores:1, potenciaKwp:7.5, tarifa:1.18}); setModal(true) }}><Plus size={16}/> Novo mês</button>
       </div>
     </header>
