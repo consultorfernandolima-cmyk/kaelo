@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Eye, Plus, Printer, Search, ShieldCheck, Sun, Calculator, AlertTriangle } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
-import { calcHybrid, calcHybridFromLoads, calcOnGrid } from './dimensionamento.js'
+import { calcHybrid, calcHybridFromLoads, calcOnGrid, calcPriceFormation } from './dimensionamento.js'
 
 const initial = [
  {id:'P-220',cliente:'Clínica Vida Plena',modelo:'Integrador',tipoProjeto:'On-grid',tipo:'Energia Solar',objeto:'Implantação de sistema fotovoltaico com fornecimento e instalação',valor:148900,etapa:'Enviada',validade:'15/10/2026'},
@@ -25,6 +26,7 @@ export default function PropostasPage(){
  const [dimensionType,setDimensionType]=useState('On-grid')
  const [onGrid,setOnGrid]=useState({consumoMensal:900,hsp:5.2,performanceRatio:81,potenciaModuloWp:550})
  const [hybrid,setHybrid]=useState({objetivo:'backup',energiaDiaria:12.84,potenciaCriticaKw:1.6,potenciaPicoKva:3.77,duracaoHoras:8,autonomiaDias:1,dod:90,eficiencia:95,degradacao:0,margem:10,bateriaNominalKwh:5.8,bateriaPotenciaKw:2.8,inversorPotenciaKva:5})
+ const [priceForm,setPriceForm]=useState({kit:0,instalacao:0,projetoEletrico:0,art:0,materialCc:0,materialCa:0,transformador:0,frete:0,outros:0,impostos:0,comissao:0,margem:20})
  const [useLoads,setUseLoads]=useState(false)
  const [loads,setLoads]=useState([])
  const model=modelInfo[licenseType]
@@ -32,6 +34,8 @@ export default function PropostasPage(){
  const onGridResult=calcOnGrid(onGrid)
  const loadResult=calcHybridFromLoads({loads,backupHours:hybrid.duracaoHoras})
  const hybridResult=calcHybrid({...hybrid,...(useLoads?{energiaNecessariaOverride:hybrid.objetivo==='backup'?loadResult.criticalEnergy:loadResult.dailyEnergy,potenciaCriticaKw:loadResult.criticalPower,potenciaPicoOverride:Math.max(hybrid.potenciaPicoKva,loadResult.connectedPeak)}:{})})
+ const priceResult=calcPriceFormation(priceForm)
+ function updatePrice(name,value){setPriceForm(x=>({...x,[name]:value}))}
 
  function save(e){
   e.preventDefault()
@@ -102,6 +106,19 @@ export default function PropostasPage(){
    <form onSubmit={save} className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl">
     <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-navy-900/5"><Sun size={19}/></div><div><h3 className="text-lg font-semibold text-navy-900">{model.title}</h3><p className="text-xs text-slate-500">Modelo determinado pela licença da organização</p></div></div>
     <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Tipo de empresa</p><p className="mt-1 font-semibold text-navy-900">{licenseType}</p><p className="mt-1 text-xs text-slate-500">Campo informativo. Não pode ser alterado na criação da proposta.</p></div>
+    <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+     <div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-navy-900">Formação de preço</p><p className="mt-1 text-xs leading-5 text-slate-500">O kit é informado como uma cotação fechada do distribuidor. Os demais campos representam custos adicionais do projeto/instalação.</p></div><span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 ring-1 ring-slate-200">Demonstração</span></div>
+     <div className="mt-4 grid gap-3 md:grid-cols-3">
+      <label className="field"><span>Kit fechado do distribuidor</span><input type="number" min="0" step="0.01" className="input" value={priceForm.kit} onChange={e=>updatePrice('kit',e.target.value)}/></label><label className="field"><span>Instalação</span><input type="number" min="0" step="0.01" className="input" value={priceForm.instalacao} onChange={e=>updatePrice('instalacao',e.target.value)}/></label><label className="field"><span>Projeto elétrico</span><input type="number" min="0" step="0.01" className="input" value={priceForm.projetoEletrico} onChange={e=>updatePrice('projetoEletrico',e.target.value)}/></label><label className="field"><span>ART</span><input type="number" min="0" step="0.01" className="input" value={priceForm.art} onChange={e=>updatePrice('art',e.target.value)}/></label><label className="field"><span>Material adicional CC</span><input type="number" min="0" step="0.01" className="input" value={priceForm.materialCc} onChange={e=>updatePrice('materialCc',e.target.value)}/></label><label className="field"><span>Material adicional CA</span><input type="number" min="0" step="0.01" className="input" value={priceForm.materialCa} onChange={e=>updatePrice('materialCa',e.target.value)}/></label><label className="field"><span>Transformador</span><input type="number" min="0" step="0.01" className="input" value={priceForm.transformador} onChange={e=>updatePrice('transformador',e.target.value)}/></label><label className="field"><span>Frete / logística</span><input type="number" min="0" step="0.01" className="input" value={priceForm.frete} onChange={e=>updatePrice('frete',e.target.value)}/></label><label className="field"><span>Outros custos</span><input type="number" min="0" step="0.01" className="input" value={priceForm.outros} onChange={e=>updatePrice('outros',e.target.value)}/></label><label className="field"><span>Impostos adicionais</span><input type="number" min="0" step="0.01" className="input" value={priceForm.impostos} onChange={e=>updatePrice('impostos',e.target.value)}/></label><label className="field"><span>Comissão</span><input type="number" min="0" step="0.01" className="input" value={priceForm.comissao} onChange={e=>updatePrice('comissao',e.target.value)}/></label><label className="field"><span>Markup / margem (%)</span><input type="number" min="0" step="0.01" className="input" value={priceForm.margem} onChange={e=>updatePrice('margem',e.target.value)}/></label>
+     </div>
+     <div className="mt-4 grid gap-3 md:grid-cols-4">
+      <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200"><p className="text-xs text-slate-500">Custo direto</p><p className="mt-1 font-semibold text-navy-900">{money(priceResult.custoDireto)}</p></div>
+      <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200"><p className="text-xs text-slate-500">Base antes da margem</p><p className="mt-1 font-semibold text-navy-900">{money(priceResult.baseAntesMargem)}</p></div>
+      <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200"><p className="text-xs text-slate-500">Preço sugerido</p><p className="mt-1 font-semibold text-solar-green">{money(priceResult.precoVenda)}</p></div>
+      <div className="rounded-xl bg-white p-3 ring-1 ring-slate-200"><p className="text-xs text-slate-500">Margem resultante</p><p className="mt-1 font-semibold text-navy-900">{(priceResult.margemLiquida*100).toFixed(1)}%</p></div>
+     </div>
+     <p className="mt-3 text-[11px] leading-5 text-slate-500">Regra provisória para validação: kit + custos adicionais + impostos + comissão formam a base; a margem configurada é aplicada como markup. O valor comercial da proposta continua editável até a regra ser validada com a planilha.</p>
+    </div>
     <div className="mt-5 grid gap-4 md:grid-cols-2">
      <label className="field md:col-span-2"><span>Cliente</span><input name="cliente" className="input" required/></label>
      {licenseType==='Integrador' && <label className="field"><span>Tipo de projeto</span><select name="tipoProjeto" value={projectType} onChange={e=>setProjectType(e.target.value)} className="input"><option>On-grid</option><option>Híbrido</option><option>Off-grid</option></select></label>}
