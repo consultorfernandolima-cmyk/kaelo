@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Eye, FileText, Plus, Printer, Search, ShieldCheck, Sun, BatteryCharging, Calculator, AlertTriangle } from 'lucide-react'
+import { Eye, Plus, Printer, Search, ShieldCheck, Sun, Calculator, AlertTriangle } from 'lucide-react'
 import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
 import { calcHybrid, calcOnGrid } from './dimensionamento.js'
 
@@ -24,7 +24,7 @@ export default function PropostasPage(){
  const [dimensionModal,setDimensionModal]=useState(false)
  const [dimensionType,setDimensionType]=useState('On-grid')
  const [onGrid,setOnGrid]=useState({consumoMensal:900,hsp:5.2,performanceRatio:81,potenciaModuloWp:550})
- const [hybrid,setHybrid]=useState({objetivo:'backup',energiaDiaria:12.84,potenciaCriticaKw:1.6,potenciaPicoKva:3.77,duracaoHoras:8,autonomiaDias:1,dod:90,eficiencia:95,degradacao:10,margem:10,bateriaNominalKwh:5.8,bateriaPotenciaKw:2.8,inversorPotenciaKva:5})
+ const [hybrid,setHybrid]=useState({objetivo:'backup',energiaDiaria:12.84,potenciaCriticaKw:1.6,potenciaPicoKva:3.77,duracaoHoras:8,autonomiaDias:1,dod:90,eficiencia:95,degradacao:0,margem:10,bateriaNominalKwh:5.8,bateriaPotenciaKw:2.8,inversorPotenciaKva:5})
  const model=modelInfo[licenseType]
  const rows=useMemo(()=>items.filter(i=>Object.values(i).some(v=>String(v).toLowerCase().includes(q.toLowerCase()))),[items,q])
  const onGridResult=calcOnGrid(onGrid)
@@ -156,7 +156,7 @@ export default function PropostasPage(){
        <label className="field"><span>Autonomia (dias)</span><input type="number" step="any" className="input" value={hybrid.autonomiaDias} onChange={e=>updateHybrid('autonomiaDias',e.target.value)}/></label>
        <label className="field"><span>DoD (%)</span><input type="number" step="any" className="input" value={hybrid.dod} onChange={e=>updateHybrid('dod',e.target.value)}/></label>
        <label className="field"><span>Eficiência (%)</span><input type="number" step="any" className="input" value={hybrid.eficiencia} onChange={e=>updateHybrid('eficiencia',e.target.value)}/></label>
-       <label className="field"><span>Degradação inicial (%)</span><input type="number" step="any" className="input" value={hybrid.degradacao} onChange={e=>updateHybrid('degradacao',e.target.value)}/></label>
+       <label className="field"><span>Reserva de degradação (%)</span><input type="number" step="any" className="input" value={hybrid.degradacao} onChange={e=>updateHybrid('degradacao',e.target.value)}/></label>
        <label className="field"><span>Margem de segurança (%)</span><input type="number" step="any" className="input" value={hybrid.margem} onChange={e=>updateHybrid('margem',e.target.value)}/></label>
        <label className="field"><span>Bateria nominal (kWh)</span><input type="number" step="any" className="input" value={hybrid.bateriaNominalKwh} onChange={e=>updateHybrid('bateriaNominalKwh',e.target.value)}/></label>
        <label className="field"><span>Potência por bateria (kW)</span><input type="number" step="any" className="input" value={hybrid.bateriaPotenciaKw} onChange={e=>updateHybrid('bateriaPotenciaKw',e.target.value)}/></label>
