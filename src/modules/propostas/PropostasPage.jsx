@@ -24,7 +24,7 @@ export default function PropostasPage(){
  const [dimensionModal,setDimensionModal]=useState(false)
  const [dimensionType,setDimensionType]=useState('On-grid')
  const [onGrid,setOnGrid]=useState({consumoMensal:900,hsp:5.2,performanceRatio:81,potenciaModuloWp:550})
- const [hybrid,setHybrid]=useState({objetivo:'backup',energiaDiaria:12.84,potenciaCriticaKw:1.6,potenciaPicoKva:3.77,duracaoHoras:8,autonomiaDias:1,dod:90,eficiencia:95,degradacao:0,margem:10,bateriaNominalKwh:5.8,bateriaPotenciaKw:2.8,inversorPotenciaKva:5})
+ const [hybrid,setHybrid]=useState({objetivo:'backup',energiaDiaria:12.84,potenciaCriticaKw:1.6,potenciaPicoKva:3.77,fatorPotencia:0.95,duracaoHoras:8,autonomiaDias:1,dod:90,eficiencia:95,degradacao:0,margem:10,bateriaNominalKwh:5.8,bateriaPotenciaKw:2.8,inversorPotenciaKva:5})
  const [priceForm,setPriceForm]=useState({kit:0,instalacao:0,projetoEletrico:0,art:0,materialCc:0,materialCa:0,transformador:0,frete:0,outros:0,impostos:0,comissao:0,margem:20})
  const [useLoads,setUseLoads]=useState(false)
  const [loads,setLoads]=useState([])
@@ -32,7 +32,7 @@ export default function PropostasPage(){
  const rows=useMemo(()=>items.filter(i=>Object.values(i).some(v=>String(v).toLowerCase().includes(q.toLowerCase()))),[items,q])
  const onGridResult=calcOnGrid(onGrid)
  const loadResult=calcHybridFromLoads({loads,backupHours:hybrid.duracaoHoras})
- const hybridResult=calcHybrid({...hybrid,...(useLoads?{energiaNecessariaOverride:hybrid.objetivo==='backup'?loadResult.criticalEnergy:loadResult.dailyEnergy,potenciaCriticaKw:loadResult.criticalPower,potenciaPicoOverride:Math.max(hybrid.potenciaPicoKva,loadResult.connectedPeak)}:{})})
+ const hybridResult=calcHybrid({...hybrid,...(useLoads?{energiaNecessariaOverride:hybrid.objetivo==='backup'?loadResult.criticalEnergy:loadResult.dailyEnergy,potenciaCriticaKw:loadResult.criticalPower,potenciaPicoOverride:Math.max(hybrid.potenciaPicoKva,loadResult.connectedPeak / Math.max(0.1,Number(hybrid.fatorPotencia || 0.95)))}:{})})
  const priceResult=calcPriceFormation(priceForm)
  function updatePrice(name,value){setPriceForm(x=>({...x,[name]:value}))}
 
@@ -198,6 +198,7 @@ export default function PropostasPage(){
        <label className="field"><span>Energia diária (kWh)</span><input type="number" step="any" className="input" value={hybrid.energiaDiaria} onChange={e=>updateHybrid('energiaDiaria',e.target.value)}/></label>
        <label className="field"><span>Carga crítica (kW)</span><input type="number" step="any" className="input" value={hybrid.potenciaCriticaKw} onChange={e=>updateHybrid('potenciaCriticaKw',e.target.value)}/></label>
        <label className="field"><span>Pico de carga (kVA)</span><input type="number" step="any" className="input" value={hybrid.potenciaPicoKva} onChange={e=>updateHybrid('potenciaPicoKva',e.target.value)}/></label>
+       <label className="field"><span>Fator de potência</span><input type="number" min="0.1" max="1" step="0.01" className="input" value={hybrid.fatorPotencia} onChange={e=>updateHybrid('fatorPotencia',e.target.value)}/><small className="text-xs text-slate-500">Converte potência aparente (kVA) em potência ativa (kW).</small></label>
        <label className="field"><span>Duração do evento (h)</span><input type="number" step="any" className="input" value={hybrid.duracaoHoras} onChange={e=>updateHybrid('duracaoHoras',e.target.value)}/></label>
        <label className="field"><span>Autonomia (dias)</span><input type="number" step="any" className="input" value={hybrid.autonomiaDias} onChange={e=>updateHybrid('autonomiaDias',e.target.value)}/></label>
        <label className="field"><span>DoD (%)</span><input type="number" step="any" className="input" value={hybrid.dod} onChange={e=>updateHybrid('dod',e.target.value)}/></label>
@@ -214,7 +215,7 @@ export default function PropostasPage(){
        <div className="surface-card p-4"><p className="text-xs text-slate-500">Potência de bateria</p><p className="mt-1 text-xl font-bold text-navy-900">{num(hybridResult.potenciaBateriaDisponivel)} kW</p></div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-       <div className={`rounded-xl border p-4 ${hybridResult.bateriaAtendePotencia?'border-emerald-200 bg-emerald-50':'border-red-200 bg-red-50'}`}><p className="text-sm font-semibold">Potência das baterias</p><p className="mt-1 text-xs">Necessário: {num(Math.max(hybrid.potenciaCriticaKw,hybrid.potenciaPicoKva))} kW/kVA · Disponível: {num(hybridResult.potenciaBateriaDisponivel)} kW</p><p className="mt-2 text-xs font-semibold">{hybridResult.bateriaAtendePotencia?'Atende a premissa de potência.':'Não atende a premissa de potência; revisar banco/inversor.'}</p></div>
+       <div className={`rounded-xl border p-4 ${hybridResult.bateriaAtendePotencia?'border-emerald-200 bg-emerald-50':'border-red-200 bg-red-50'}`}><p className="text-sm font-semibold">Potência das baterias</p><p className="mt-1 text-xs">Necessário: {num(hybridResult.potenciaBateriaNecessaria)} kW · Disponível: {num(hybridResult.potenciaBateriaDisponivel)} kW</p><p className="mt-2 text-xs font-semibold">{hybridResult.bateriaAtendePotencia?'Atende a premissa de potência.':'Não atende a premissa de potência; revisar banco/inversor.'}</p></div>
        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><p className="text-sm font-semibold text-navy-900">Compatibilidade final</p><p className="mt-1 text-xs leading-5 text-slate-600">Antes de fechar a proposta, validar tensão, faixa de operação, corrente, potência de carga/descarga, BMS/comunicação, homologação/registro aplicável e compatibilidade entre inversor e bateria.</p></div>
       </div>
       <div className="rounded-xl border border-slate-200 p-4 text-sm text-slate-600">Base técnica do pré-cálculo: energia e potência são dimensionadas separadamente; a capacidade nominal é ajustada por DoD, eficiência, degradação e margem. Com o perfil de cargas ativo, a energia de backup passa a ser calculada pelas cargas críticas e suas horas de operação. A próxima evolução será importar curva de carga/geração de 24 h ou 8760 h para simulação energética.</div>
