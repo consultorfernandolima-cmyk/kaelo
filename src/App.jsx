@@ -20,13 +20,12 @@ import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
 import ProdutosPage from './modules/cadastros/ProdutosPage.jsx'
 import AcessosPage from './modules/cadastros/AcessosPage.jsx'
 import ConfiguracoesPage from './modules/configuracoes/ConfiguracoesPage.jsx'
+import FinanceiroPage from './modules/finance/FinanceiroPage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
 
 const modulePages = {
-  '/financeiro': ['Financeiro', 'Contas a pagar, receber, lançamentos e conciliação.', 'Financeiro'],
   '/estoque': ['Estoque', 'Produtos, depósitos, movimentos e saldos operacionais.', 'Estoque'],
   '/operacoes': ['Operações', 'Ordens, serviços, agenda e execução operacional.', 'Operações'],
-
 }
 
 export default function App() {
@@ -54,6 +53,7 @@ export default function App() {
         <Route path="/gestao-usinas/equipamentos" element={<EquipamentosPage />} />
         <Route path="/gestao-usinas/geracao" element={<GeracaoPage />} />
         <Route path="/gestao-usinas/relatorio-consumo" element={<RelatorioConsumoGeracaoPage />} />
+        <Route path="/financeiro" element={<FinanceiroPage />} />
         {Object.entries(modulePages).map(([path, [title, description, eyebrow]]) => (
           <Route key={path} path={path} element={<ModulePage title={title} description={description} eyebrow={eyebrow} />} />
         ))}
