@@ -31,9 +31,11 @@ export function calcHybrid({
   bateriaNominalKwh,
   bateriaPotenciaKw,
   inversorPotenciaKva,
+  energiaNecessariaOverride,
+  potenciaPicoOverride,
 }) {
   const energia = Number(energiaDiaria || 0)
-  const pico = Number(potenciaPicoKva || potenciaCriticaKw || 0)
+  const pico = Number(potenciaPicoOverride ?? potenciaPicoKva ?? potenciaCriticaKw ?? 0)
   const critica = Number(potenciaCriticaKw || 0)
   const horas = Number(duracaoHoras || 0)
   const dias = Number(autonomiaDias || 1)
@@ -47,7 +49,8 @@ export function calcHybrid({
   else if (objetivo === 'peak-shaving') energiaBase = Math.max(0, pico - critica) * horas * dias
   else energiaBase = energia * dias
 
-  const energiaUtil = energiaBase * margin
+  const energiaNecessaria = Number.isFinite(Number(energiaNecessariaOverride)) ? Number(energiaNecessariaOverride) : energiaBase
+  const energiaUtil = energiaNecessaria * margin
   const denom = Math.max(depth * eff * Math.max(0.01, 1 - degr), 0.01)
   const capacidadeNominal = energiaUtil / denom
   const qtdBaterias = Number(bateriaNominalKwh) > 0 ? Math.ceil(capacidadeNominal / Number(bateriaNominalKwh)) : 0
@@ -59,6 +62,7 @@ export function calcHybrid({
 
   return {
     energiaBase,
+    energiaNecessaria,
     energiaUtil,
     capacidadeNominal,
     qtdBaterias,
