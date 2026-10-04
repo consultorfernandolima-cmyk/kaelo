@@ -23,12 +23,10 @@ import ConfiguracoesPage from './modules/configuracoes/ConfiguracoesPage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
 
 const modulePages = {
-  '/crm': ['CRM', 'Funil comercial, oportunidades, atividades e próximos contatos.', 'Comercial'],
   '/financeiro': ['Financeiro', 'Contas a pagar, receber, lançamentos e conciliação.', 'Financeiro'],
   '/estoque': ['Estoque', 'Produtos, depósitos, movimentos e saldos operacionais.', 'Estoque'],
   '/operacoes': ['Operações', 'Ordens, serviços, agenda e execução operacional.', 'Operações'],
 
-  '/configuracoes': ['Configurações', 'Organização, empresas, parâmetros e integrações e controle de acesso.', 'Administração'],
 }
 
 export default function App() {
@@ -40,6 +38,7 @@ export default function App() {
         <Route path="/clientes" element={<ClientesPage />} />
         <Route path="/cadastros/grupos-familias" element={<GruposFamiliasPage />} />
         <Route path="/cadastros/produtos" element={<ProdutosPage />} />
+        <Route path="/configuracoes" element={<ConfiguracoesPage />} />
         <Route path="/configuracoes/acessos" element={<AcessosPage />} />
         <Route path="/cadastros/acessos" element={<Navigate to="/configuracoes/acessos" replace />} />
         <Route path="/usinas" element={<UsinasPage />} />
