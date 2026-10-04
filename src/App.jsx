@@ -20,11 +20,11 @@ import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
 import ProdutosPage from './modules/cadastros/ProdutosPage.jsx'
 import AcessosPage from './modules/cadastros/AcessosPage.jsx'
 import ConfiguracoesPage from './modules/configuracoes/ConfiguracoesPage.jsx'
+import EstoquePage from './modules/estoque/EstoquePage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
 
 const modulePages = {
   '/financeiro': ['Financeiro', 'Contas a pagar, receber, lançamentos e conciliação.', 'Financeiro'],
-  '/estoque': ['Estoque', 'Produtos, depósitos, movimentos e saldos operacionais.', 'Estoque'],
   '/operacoes': ['Operações', 'Ordens, serviços, agenda e execução operacional.', 'Operações'],
 
 }
@@ -47,6 +47,7 @@ export default function App() {
         <Route path="/crm" element={<CRMPage />} />
         <Route path="/contratos" element={<ContratosPage />} />
         <Route path="/relatorios" element={<RelatoriosPage />} />
+        <Route path="/estoque" element={<EstoquePage />} />
         <Route path="/ordens-servico" element={<OrdensServicoPage />} />
         <Route path="/implantacoes" element={<ImplantacoesPage />} />
         <Route path="/gestao-usinas" element={<GestaoUsinasPage />} />
