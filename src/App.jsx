@@ -9,6 +9,7 @@ import CRMPage from './modules/crm/CRMPage.jsx'
 import RelatoriosPage from './modules/relatorios/RelatoriosPage.jsx'
 import ContratosPage from './modules/contratos/ContratosPage.jsx'
 import OrdensServicoPage from './modules/ordens-servico/OrdensServicoPage.jsx'
+import ImplantacoesPage from './modules/implantacoes/ImplantacoesPage.jsx'
 import CadastrosPage from './modules/cadastros/CadastrosPage.jsx'
 import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
 import ProdutosPage from './modules/cadastros/ProdutosPage.jsx'
@@ -43,6 +44,7 @@ export default function App() {
         <Route path="/contratos" element={<ContratosPage />} />
         <Route path="/relatorios" element={<RelatoriosPage />} />
         <Route path="/ordens-servico" element={<OrdensServicoPage />} />
+        <Route path="/implantacoes" element={<ImplantacoesPage />} />
         {Object.entries(modulePages).map(([path, [title, description, eyebrow]]) => (
           <Route key={path} path={path} element={<ModulePage title={title} description={description} eyebrow={eyebrow} />} />
         ))}
