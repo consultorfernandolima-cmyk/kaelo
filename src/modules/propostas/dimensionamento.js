@@ -69,3 +69,46 @@ export function calcHybrid({
     bateriaAtendePotencia,
   }
 }
+
+export function calcHybridFromLoads({ loads = [], backupHours = 8 }) {
+  const hours = Number(backupHours || 0)
+  const normalized = loads.map(load => ({
+    name: load.name || 'Carga',
+    powerKw: Math.max(0, Number(load.powerKw || 0)),
+    hoursPerDay: Math.max(0, Number(load.hoursPerDay || 0)),
+    simultaneity: Math.max(0, Math.min(1, Number(load.simultaneity ?? 1))),
+    critical: Boolean(load.critical),
+  }))
+
+  const dailyEnergy = normalized.reduce(
+    (sum, load) => sum + load.powerKw * load.hoursPerDay * load.simultaneity,
+    0,
+  )
+
+  const criticalPower = normalized.reduce(
+    (sum, load) => sum + (load.critical ? load.powerKw * load.simultaneity : 0),
+    0,
+  )
+
+  const criticalEnergy = normalized.reduce(
+    (sum, load) =>
+      sum +
+      (load.critical
+        ? load.powerKw * Math.min(load.hoursPerDay, hours) * load.simultaneity
+        : 0),
+    0,
+  )
+
+  const connectedPeak = normalized.reduce(
+    (sum, load) => sum + load.powerKw * load.simultaneity,
+    0,
+  )
+
+  return {
+    dailyEnergy,
+    criticalPower,
+    criticalEnergy,
+    connectedPeak,
+    loadCount: normalized.length,
+  }
+}
