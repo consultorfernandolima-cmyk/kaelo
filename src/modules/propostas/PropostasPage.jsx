@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { Eye, Plus, Printer, Search, ShieldCheck, Sun, Calculator, AlertTriangle } from 'lucide-react'
-import { useMemo, useState } from 'react'
 import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
 import { calcHybrid, calcHybridFromLoads, calcOnGrid, calcPriceFormation } from './dimensionamento.js'
 
