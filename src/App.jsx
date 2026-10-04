@@ -10,6 +10,10 @@ import RelatoriosPage from './modules/relatorios/RelatoriosPage.jsx'
 import ContratosPage from './modules/contratos/ContratosPage.jsx'
 import OrdensServicoPage from './modules/ordens-servico/OrdensServicoPage.jsx'
 import ImplantacoesPage from './modules/implantacoes/ImplantacoesPage.jsx'
+import GestaoUsinasPage from './modules/gestao-usinas/GestaoUsinasPage.jsx'
+import PlanejamentoPage from './modules/gestao-usinas/PlanejamentoPage.jsx'
+import EquipamentosPage from './modules/gestao-usinas/EquipamentosPage.jsx'
+import GeracaoPage from './modules/gestao-usinas/GeracaoPage.jsx'
 import CadastrosPage from './modules/cadastros/CadastrosPage.jsx'
 import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
 import ProdutosPage from './modules/cadastros/ProdutosPage.jsx'
@@ -45,6 +49,10 @@ export default function App() {
         <Route path="/relatorios" element={<RelatoriosPage />} />
         <Route path="/ordens-servico" element={<OrdensServicoPage />} />
         <Route path="/implantacoes" element={<ImplantacoesPage />} />
+        <Route path="/gestao-usinas" element={<GestaoUsinasPage />} />
+        <Route path="/gestao-usinas/planejamento" element={<PlanejamentoPage />} />
+        <Route path="/gestao-usinas/equipamentos" element={<EquipamentosPage />} />
+        <Route path="/gestao-usinas/geracao" element={<GeracaoPage />} />
         {Object.entries(modulePages).map(([path, [title, description, eyebrow]]) => (
           <Route key={path} path={path} element={<ModulePage title={title} description={description} eyebrow={eyebrow} />} />
         ))}
