@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useLocation, useMemo, useState } from 'react'
 import { CheckCircle2, Eye, FileText, Plus, Search, Sun } from 'lucide-react'
 import { StatusBadge } from '../../components/ui.jsx'
 
@@ -11,7 +11,9 @@ const initial = [
 const stages = ['Projeto', 'Aprovação', 'Instalação', 'Comissionamento', 'Concluída']
 
 export default function ImplantacoesPage() {
-  const [items, setItems] = useState(initial)
+  const location = useLocation()
+  const incomingContract = location.state?.contract
+  const [items, setItems] = useState(() => incomingContract ? [{ id: 'IMP-NEW', proposta: incomingContract.proposta || 'A definir', cliente: incomingContract.cliente, usina: 'Usina a cadastrar', etapa: 'Projeto', responsavel: 'A definir', inicio: '', progresso: 10, atividades: ['Receber dados técnicos do contrato', 'Cadastrar usina', 'Planejar implantação'] }, ...initial] : initial)
   const [q, setQ] = useState('')
   const [modal, setModal] = useState(false)
   const [view, setView] = useState(null)
