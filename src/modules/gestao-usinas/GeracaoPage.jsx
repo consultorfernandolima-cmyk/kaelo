@@ -105,8 +105,8 @@ export default function GeracaoPage() {
       <div className="flex items-center justify-between gap-3"><div><h3 className="font-semibold text-navy-900">Dados calculados do período</h3><p className="mt-1 text-sm text-slate-500">Regras trazidas do modelo de Excel utilizado atualmente.</p></div><button className="btn-primary" onClick={()=>window.print()}><Save size={16}/> Gerar relatório do cliente</button></div>
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         <div><p className="text-xs text-slate-500">Consumo total da instalação</p><p className="font-semibold">{current.consumoTotal.toLocaleString('pt-BR',{maximumFractionDigits:2})} kWh</p></div>
-        <div><p className="text-xs text-slate-500">Consumo vindo da usina</p><p className="font-semibold">{(current.consumoUsina*100).toFixed(1)}%</p></div>
-        <div><p className="text-xs text-slate-500">Consumo vindo da rede</p><p className="font-semibold">{(current.consumoCemig*100).toFixed(1)}%</p></div>
+        <div><p className="text-xs text-slate-500">Consumo vindo da usina</p><p className="font-semibold">{(current.fatorUsina*100).toFixed(1)}%</p></div>
+        <div><p className="text-xs text-slate-500">Consumo vindo da rede</p><p className="font-semibold">{(current.fatorCemig*100).toFixed(1)}%</p></div>
         <div><p className="text-xs text-slate-500">Árvores plantadas (equivalência)</p><p className="font-semibold">{current.arvores.toFixed(0)}</p></div>
         <div><p className="text-xs text-slate-500">Água não utilizada</p><p className="font-semibold">{current.agua.toFixed(2)} milhões de litros</p></div>
         <div><p className="text-xs text-slate-500">Valor pago da conta</p><p className="font-semibold">R$ {Number(selected.valorConta).toLocaleString('pt-BR',{minimumFractionDigits:2})}</p></div>
