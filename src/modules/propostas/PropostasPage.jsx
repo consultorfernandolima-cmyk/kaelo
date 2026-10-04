@@ -39,7 +39,7 @@ export default function PropostasPage(){
  function save(e){
   e.preventDefault()
   const v=Object.fromEntries(new FormData(e.currentTarget))
-  const item={id:`P-${String(items.length+220).padStart(3,'0')}`,modelo:licenseType,tipo:'Energia Solar',tipoProjeto:projectType,...v,valor:Number(v.valor||0)}
+  const item={id:`P-${String(items.length+220).padStart(3,'0')}`,modelo:licenseType,tipo:'Energia Solar',tipoProjeto:projectType,...v,valor:Number(v.valor||0),formacaoPreco:{...priceForm,...priceResult}}
   setItems(x=>[item,...x]);setModal(false);setView(item)
  }
 
