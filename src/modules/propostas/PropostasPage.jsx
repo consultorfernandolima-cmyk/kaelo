@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Eye, Plus, Printer, Search, ShieldCheck, Sun, Calculator, AlertTriangle } from 'lucide-react'
 import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
 import { calcHybrid, calcHybridFromLoads, calcOnGrid, calcPriceFormation } from './dimensionamento.js'
+import { IRRADIANCE_SOURCE, selectHsp } from './irradiacao.js'
 
 const initial = [
  {id:'P-220',cliente:'Clínica Vida Plena',modelo:'Integrador',tipoProjeto:'On-grid',tipo:'Energia Solar',objeto:'Implantação de sistema fotovoltaico com fornecimento e instalação',valor:148900,etapa:'Enviada',validade:'15/10/2026'},
@@ -24,6 +25,7 @@ export default function PropostasPage(){
  const [dimensionModal,setDimensionModal]=useState(false)
  const [dimensionType,setDimensionType]=useState('On-grid')
  const [onGrid,setOnGrid]=useState({consumoMensal:900,hsp:5.2,performanceRatio:81,potenciaModuloWp:550})
+ const [irradiance,setIrradiance]=useState({localidade:'',coordenadas:'',month:'mediaAnual',mediaAnual:null,fonte:IRRADIANCE_SOURCE.dataset})
  const [hybrid,setHybrid]=useState({objetivo:'backup',energiaDiaria:12.84,potenciaCriticaKw:1.6,potenciaPicoKva:3.77,fatorPotencia:0.95,duracaoHoras:8,autonomiaDias:1,dod:90,eficiencia:95,degradacao:0,margem:10,bateriaNominalKwh:5.8,bateriaPotenciaKw:2.8,inversorPotenciaKva:5})
  const [priceForm,setPriceForm]=useState({kit:0,instalacao:0,projetoEletrico:0,art:0,materialCc:0,materialCa:0,transformador:0,frete:0,outros:0,impostos:0,comissao:0,margem:20})
  const [useLoads,setUseLoads]=useState(false)
@@ -44,6 +46,8 @@ export default function PropostasPage(){
  }
 
  function updateOnGrid(name,value){setOnGrid(x=>({...x,[name]:value}))}
+ function updateIrradiance(name,value){setIrradiance(x=>({...x,[name]:value}))}
+ function applyIrradiance(value){setIrradiance(x=>({...x,mediaAnual:value}));setOnGrid(x=>({...x,hsp:value}))}
  function updateHybrid(name,value){setHybrid(x=>({...x,[name]:value}))}
  function addLoad(){setLoads(x=>[...x,{name:'Nova carga',powerKw:'',hoursPerDay:'',simultaneity:1,critical:true}])}
  function updateLoad(index,name,value){setLoads(x=>x.map((load,i)=>i===index?{...load,[name]:value}:load))}
@@ -166,7 +170,7 @@ export default function PropostasPage(){
        <div className="surface-card p-4"><p className="text-xs text-slate-500">Potência instalada</p><p className="mt-1 text-xl font-bold text-navy-900">{num(onGridResult.potenciaRealKwp)} kWp</p></div>
        <div className="surface-card p-4"><p className="text-xs text-slate-500">Geração estimada</p><p className="mt-1 text-xl font-bold text-navy-900">{num(onGridResult.geracaoEstimada)} kWh/mês</p></div>
       </div>
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">Premissa atual: <strong>Geração = kWp × HSP × PR × 30</strong>. O PR, HSP e módulo ficam editáveis. Isso permite confrontar o cálculo do Kaelo com a metodologia comercial atual antes de congelarmos a fórmula.</div>
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">Fonte de irradiação: <strong>{IRRADIANCE_SOURCE.provider} {IRRADIANCE_SOURCE.dataset}</strong> · {irradiance.localidade || 'localidade ainda não informada'} · unidade {IRRADIANCE_SOURCE.unit}. Premissa atual: <strong>Geração = kWp × HSP × PR × 30</strong>. O PR, HSP e módulo ficam editáveis. Isso permite confrontar o cálculo do Kaelo com a metodologia comercial atual antes de congelarmos a fórmula.</div>
      </div>}
      {dimensionType==='Híbrido' && <div className="mt-5 space-y-5">
       <div className="rounded-xl border border-blue-200 bg-blue-50 p-4"><p className="text-sm font-semibold text-blue-900">Pré-dimensionamento híbrido</p><p className="mt-1 text-xs leading-5 text-blue-800">O Kaelo separa energia (kWh) de potência (kW/kVA), considera DoD, eficiência, degradação e margem. A validação final ainda depende do perfil horário, fabricante, compatibilidade e requisitos da distribuidora.</p></div>
