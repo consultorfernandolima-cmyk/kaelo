@@ -7,6 +7,7 @@ import {
   FileText,
   LayoutDashboard,
   Settings,
+  Sun,
   Warehouse,
 } from 'lucide-react'
 
@@ -33,6 +34,7 @@ const groups = [
     label: 'Operação',
     items: [
       { to: '/ordens-servico', label: 'Ordens de serviço', icon: ClipboardList },
+      { to: '/implantacoes', label: 'Implantações', icon: Sun },
       { to: '/operacoes', label: 'Operações', icon: BriefcaseBusiness },
       { to: '/estoque', label: 'Estoque', icon: Warehouse },
     ],
