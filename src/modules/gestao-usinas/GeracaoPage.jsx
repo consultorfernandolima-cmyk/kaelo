@@ -1,4 +1,130 @@
-import { BarChart3, Plus, Printer } from 'lucide-react'
+import { FileText, Plus, Printer, Save } from 'lucide-react'
 import { useMemo, useState } from 'react'
-const initial=[{usina:'Usina SL-12 kWp',periodo:'2026-09',geracao:1480,esperada:1520},{usina:'Cobertura 45 kWp',periodo:'2026-09',geracao:5280,esperada:5100},{usina:'Solo 180 kWp',periodo:'2026-09',geracao:21400,esperada:22600}]
-export default function GeracaoPage(){const[rows,setRows]=useState(initial),[modal,setModal]=useState(false);const total=rows.reduce((s,r)=>s+r.geracao,0),esperada=rows.reduce((s,r)=>s+r.esperada,0);const media=esperada?((total/esperada-1)*100):0;const grouped=useMemo(()=>rows,[rows]);return <section className="space-y-5"><header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Gestão de Usinas · Monitoramento</p><h2 className="page-title">Geração e desempenho</h2><p className="page-subtitle">Registro preparado para receber dados manuais ou integrações futuras de plataformas de monitoramento.</p></div><div className="flex gap-2"><button className="btn-secondary" onClick={()=>window.print()}><Printer size={16}/> Imprimir / PDF</button><button className="btn-primary" onClick={()=>setModal(true)}><Plus size={16}/> Registrar geração</button></div></header><div className="grid gap-4 md:grid-cols-3"><div className="surface-card p-4"><p className="text-xs text-slate-500">Geração registrada</p><p className="mt-1 text-xl font-bold text-navy-900">{total.toLocaleString('pt-BR')} kWh</p></div><div className="surface-card p-4"><p className="text-xs text-slate-500">Geração esperada</p><p className="mt-1 text-xl font-bold text-navy-900">{esperada.toLocaleString('pt-BR')} kWh</p></div><div className="surface-card p-4"><p className="text-xs text-slate-500">Variação média</p><p className="mt-1 text-xl font-bold text-navy-900">{media.toFixed(1)}%</p></div></div><div className="surface-card overflow-hidden"><div className="border-b border-slate-200 p-4"><div className="flex items-center gap-2"><BarChart3 size={17}/><h3 className="font-semibold text-navy-900">Relatório mensal</h3></div></div><div className="overflow-x-auto"><table className="data-table"><thead><tr><th>Usina</th><th>Período</th><th>Geração</th><th>Esperada</th><th>Variação</th><th>Status</th></tr></thead><tbody>{grouped.map(r=>{const v=r.esperada?((r.geracao/r.esperada-1)*100):0;return <tr key={r.usina+r.periodo}><td className="font-medium">{r.usina}</td><td>{r.periodo}</td><td>{r.geracao.toLocaleString('pt-BR')} kWh</td><td>{r.esperada.toLocaleString('pt-BR')} kWh</td><td>{v.toFixed(1)}%</td><td>{v>=0?'Acima da expectativa':'Abaixo da expectativa'}</td></tr>})}</tbody></table></div></div><div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">Dados demonstrativos. Não há integração com inversores neste momento; a estrutura está preparada para receber geração, expectativa, variação e observações.</div>{modal&&<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4"><form onSubmit={e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget));setRows(x=>[{usina:v.usina,periodo:v.periodo,geracao:Number(v.geracao),esperada:Number(v.esperada)},...x]);setModal(false)}} className="w-full max-w-xl rounded-2xl bg-white p-6 shadow-xl"><h3 className="text-lg font-semibold text-navy-900">Registrar geração</h3><div className="mt-5 grid gap-4 md:grid-cols-2"><label className="field md:col-span-2"><span>Usina</span><input name="usina" className="input" required/></label><label className="field"><span>Período</span><input name="periodo" type="month" className="input" required/></label><label className="field"><span>Geração realizada (kWh)</span><input name="geracao" type="number" min="0" className="input" required/></label><label className="field"><span>Geração esperada (kWh)</span><input name="esperada" type="number" min="0" className="input" required/></label></div><div className="mt-6 flex justify-end gap-2"><button type="button" className="btn-secondary" onClick={()=>setModal(false)}>Cancelar</button><button className="btn-primary">Registrar</button></div></form></div>}</section>}
+import { Link } from 'react-router-dom'
+
+const initial = [{
+  id: 'CG-2026-08-SINTICOMP',
+  cliente: 'Sinticomp',
+  inversor: 'Fronius',
+  modulos: 24,
+  potenciaWp: 330,
+  inversores: 1,
+  potenciaKwp: 7.5,
+  periodo: '2026-08',
+  geracao: 764.80724,
+  consumoRede: 349,
+  energiaInjetada: 1190,
+  tarifa: 1.18,
+  iluminacaoImpostos: 51.56,
+  valorConta: 110.53,
+  saldoAtual: 27544,
+}]
+
+function calc(r) {
+  const expectativa = r.potenciaKwp * 5.2 * 0.81 * 30
+  const saldoGeracao = r.energiaInjetada - (r.consumoRede - 50)
+  const consumoDuranteGeracao = r.geracao - r.energiaInjetada
+  const consumoTotal = r.consumoRede + consumoDuranteGeracao
+  const aproveitamento = expectativa ? r.geracao / expectativa : 0
+  const saldoMes = r.energiaInjetada - r.consumoRede
+  const economia = r.geracao * r.tarifa
+  const consumoCemig = consumoTotal ? r.consumoRede / consumoTotal : 0
+  const consumoUsina = consumoTotal ? consumoDuranteGeracao / consumoTotal : 0
+  const arvores = r.geracao / 333.33
+  const agua = arvores * 1.32
+  const co2 = arvores * 0.0983
+  return { expectativa, saldoGeracao, consumoDuranteGeracao, consumoTotal, aproveitamento, saldoMes, economia, consumoCemig, consumoUsina, arvores, agua, co2 }
+}
+
+export default function GeracaoPage() {
+  const [rows, setRows] = useState(initial)
+  const [selected, setSelected] = useState(initial[0])
+  const [modal, setModal] = useState(false)
+  const [form, setForm] = useState({})
+
+  const current = useMemo(() => calc(selected), [selected])
+
+  const save = (e) => {
+    e.preventDefault()
+    const value = {
+      id: `CG-${form.periodo}-${String(form.cliente).toUpperCase().replace(/\\s+/g, '-')}`,
+      cliente: form.cliente,
+      inversor: form.inversor,
+      modulos: Number(form.modulos),
+      potenciaWp: Number(form.potenciaWp),
+      inversores: Number(form.inversores),
+      potenciaKwp: Number(form.potenciaKwp),
+      periodo: form.periodo,
+      geracao: Number(form.geracao),
+      consumoRede: Number(form.consumoRede),
+      energiaInjetada: Number(form.energiaInjetada),
+      tarifa: Number(form.tarifa),
+      iluminacaoImpostos: Number(form.iluminacaoImpostos || 0),
+      valorConta: Number(form.valorConta || 0),
+      saldoAtual: Number(form.saldoAtual || 0),
+    }
+    setRows(x => [value, ...x])
+    setSelected(value)
+    setModal(false)
+  }
+
+  return <section className="space-y-5">
+    <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Gestão de Usinas · Monitoramento</p>
+        <h2 className="page-title">Consumo e Geração</h2>
+        <p className="page-subtitle">Lançamento mensal e preparação do relatório que será enviado ao cliente.</p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <button className="btn-secondary" onClick={() => window.print()}><Printer size={16}/> Imprimir / PDF</button>
+        <Link className="btn-secondary" to="/gestao-usinas/relatorio-consumo"><FileText size={16}/> Ver relatório</Link>
+        <button className="btn-primary" onClick={() => { setForm({periodo:'2026-10', inversor:'Fronius', modulos:24, potenciaWp:330, inversores:1, potenciaKwp:7.5, tarifa:1.18}); setModal(true) }}><Plus size={16}/> Novo mês</button>
+      </div>
+    </header>
+
+    <div className="surface-card overflow-hidden">
+      <div className="border-b border-slate-200 p-4"><h3 className="font-semibold text-navy-900">Histórico mensal</h3><p className="mt-1 text-sm text-slate-500">O Kaelo substitui a planilha por registros mensais vinculados à usina.</p></div>
+      <div className="overflow-x-auto"><table className="data-table"><thead><tr><th>Cliente</th><th>Período</th><th>Geração</th><th>Consumo rede</th><th>Injetada</th><th>Aproveitamento</th><th></th></tr></thead><tbody>
+        {rows.map(r => { const c=calc(r); return <tr key={r.id}><td className="font-medium">{r.cliente}</td><td>{r.periodo}</td><td>{r.geracao.toLocaleString('pt-BR',{maximumFractionDigits:2})} kWh</td><td>{r.consumoRede.toLocaleString('pt-BR')} kWh</td><td>{r.energiaInjetada.toLocaleString('pt-BR')} kWh</td><td>{(c.aproveitamento*100).toFixed(0)}%</td><td><button className="btn-secondary" onClick={()=>setSelected(r)}>Abrir</button></td></tr> })}
+      </tbody></table></div>
+    </div>
+
+    <div className="grid gap-4 md:grid-cols-4">
+      {[
+        ['Expectativa de geração', `${current.expectativa.toLocaleString('pt-BR',{maximumFractionDigits:2})} kWh`],
+        ['Saldo de geração', `${current.saldoGeracao.toLocaleString('pt-BR',{maximumFractionDigits:2})} kWh`],
+        ['Economia gerada', `R$ ${current.economia.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}`],
+        ['CO₂ não emitido', `${current.co2.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} t`],
+      ].map(([label,value])=><div className="surface-card p-4" key={label}><p className="text-xs text-slate-500">{label}</p><p className="mt-1 text-xl font-bold text-navy-900">{value}</p></div>)}
+    </div>
+
+    <div className="surface-card p-5">
+      <div className="flex items-center justify-between gap-3"><div><h3 className="font-semibold text-navy-900">Dados calculados do período</h3><p className="mt-1 text-sm text-slate-500">Regras trazidas do modelo de Excel utilizado atualmente.</p></div><button className="btn-primary" onClick={()=>window.print()}><Save size={16}/> Gerar relatório do cliente</button></div>
+      <div className="mt-5 grid gap-4 md:grid-cols-3">
+        <div><p className="text-xs text-slate-500">Consumo total da instalação</p><p className="font-semibold">{current.consumoTotal.toLocaleString('pt-BR',{maximumFractionDigits:2})} kWh</p></div>
+        <div><p className="text-xs text-slate-500">Consumo vindo da usina</p><p className="font-semibold">{(current.consumoUsina*100).toFixed(1)}%</p></div>
+        <div><p className="text-xs text-slate-500">Consumo vindo da rede</p><p className="font-semibold">{(current.consumoCemig*100).toFixed(1)}%</p></div>
+        <div><p className="text-xs text-slate-500">Árvores plantadas (equivalência)</p><p className="font-semibold">{current.arvores.toFixed(0)}</p></div>
+        <div><p className="text-xs text-slate-500">Água não utilizada</p><p className="font-semibold">{current.agua.toFixed(2)} milhões de litros</p></div>
+        <div><p className="text-xs text-slate-500">Valor pago da conta</p><p className="font-semibold">R$ {Number(selected.valorConta).toLocaleString('pt-BR',{minimumFractionDigits:2})}</p></div>
+      </div>
+    </div>
+
+    <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">Dados demonstrativos. O modelo de cálculo foi mapeado do arquivo Excel atual; a persistência e a integração com faturas/monitoramento serão conectadas posteriormente.</div>
+
+    {modal && <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4"><form onSubmit={save} className="max-h-[90vh] w-full max-w-4xl overflow-auto rounded-2xl bg-white p-6 shadow-xl">
+      <h3 className="text-lg font-semibold text-navy-900">Lançamento mensal de consumo e geração</h3>
+      <p className="mt-1 text-sm text-slate-500">Campos equivalentes ao preenchimento atual da planilha.</p>
+      <div className="mt-5 grid gap-4 md:grid-cols-3">
+        {[
+          ['cliente','Cliente','text',true],['periodo','Período','month',true],['inversor','Inversor/monitoramento','text',true],
+          ['modulos','Quantidade de módulos','number',true],['potenciaWp','Potência do módulo (Wp)','number',true],['inversores','Quantidade de inversores','number',true],
+          ['potenciaKwp','Usina projetada (kWp)','number',true],['geracao','Energia gerada (kWh)','number',true],['consumoRede','Energia consumida da rede (kWh)','number',true],
+          ['energiaInjetada','Energia injetada (kWh)','number',true],['tarifa','Tarifa da fatura (R$/kWh)','number',true],['iluminacaoImpostos','Iluminação pública + impostos','number',false],
+          ['valorConta','Valor pago da conta de luz','number',false],['saldoAtual','Saldo atual de geração','number',false],
+        ].map(([name,label,type,required])=><label className="field" key={name}><span>{label}</span><input name={name} type={type} required={required} step={type==='number'?'0.01':undefined} className="input" defaultValue={form[name] ?? ''}/></label>)}
+      </div>
+      <div className="mt-6 flex justify-end gap-2"><button type="button" className="btn-secondary" onClick={()=>setModal(false)}>Cancelar</button><button className="btn-primary">Salvar mês</button></div>
+    </form></div>}
+  </section>
+}
