@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Eye, Plus, Printer, Search, ShieldCheck, Sun, Calculator, AlertTriangle } from 'lucide-react'
 import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
 import { calcHybrid, calcHybridFromLoads, calcOnGrid, calcPriceFormation } from './dimensionamento.js'
-import { IRRADIANCE_SOURCE, selectHsp } from './irradiacao.js'
+import { IRRADIANCE_SOURCE } from './irradiacao.js'
 
 const initial = [
  {id:'P-220',cliente:'Clínica Vida Plena',modelo:'Integrador',tipoProjeto:'On-grid',tipo:'Energia Solar',objeto:'Implantação de sistema fotovoltaico com fornecimento e instalação',valor:148900,etapa:'Enviada',validade:'15/10/2026'},
@@ -47,7 +47,6 @@ export default function PropostasPage(){
 
  function updateOnGrid(name,value){setOnGrid(x=>({...x,[name]:value}))}
  function updateIrradiance(name,value){setIrradiance(x=>({...x,[name]:value}))}
- function applyIrradiance(value){setIrradiance(x=>({...x,mediaAnual:value}));setOnGrid(x=>({...x,hsp:value}))}
  function updateHybrid(name,value){setHybrid(x=>({...x,[name]:value}))}
  function addLoad(){setLoads(x=>[...x,{name:'Nova carga',powerKw:'',hoursPerDay:'',simultaneity:1,critical:true}])}
  function updateLoad(index,name,value){setLoads(x=>x.map((load,i)=>i===index?{...load,[name]:value}:load))}
