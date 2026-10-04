@@ -14,6 +14,7 @@ import GestaoUsinasPage from './modules/gestao-usinas/GestaoUsinasPage.jsx'
 import PlanejamentoPage from './modules/gestao-usinas/PlanejamentoPage.jsx'
 import EquipamentosPage from './modules/gestao-usinas/EquipamentosPage.jsx'
 import GeracaoPage from './modules/gestao-usinas/GeracaoPage.jsx'
+import RelatorioConsumoGeracaoPage from './modules/gestao-usinas/RelatorioConsumoGeracaoPage.jsx'
 import CadastrosPage from './modules/cadastros/CadastrosPage.jsx'
 import GruposFamiliasPage from './modules/cadastros/GruposFamiliasPage.jsx'
 import ProdutosPage from './modules/cadastros/ProdutosPage.jsx'
@@ -53,6 +54,7 @@ export default function App() {
         <Route path="/gestao-usinas/planejamento" element={<PlanejamentoPage />} />
         <Route path="/gestao-usinas/equipamentos" element={<EquipamentosPage />} />
         <Route path="/gestao-usinas/geracao" element={<GeracaoPage />} />
+        <Route path="/gestao-usinas/relatorio-consumo" element={<RelatorioConsumoGeracaoPage />} />
         {Object.entries(modulePages).map(([path, [title, description, eyebrow]]) => (
           <Route key={path} path={path} element={<ModulePage title={title} description={description} eyebrow={eyebrow} />} />
         ))}
