@@ -33,9 +33,12 @@ export function calcHybrid({
   inversorPotenciaKva,
   energiaNecessariaOverride,
   potenciaPicoOverride,
+  fatorPotencia = 0.95,
 }) {
   const energia = Number(energiaDiaria || 0)
-  const pico = Number(potenciaPicoOverride ?? potenciaPicoKva ?? potenciaCriticaKw ?? 0)
+  const picoKva = Number(potenciaPicoOverride ?? potenciaPicoKva ?? 0)
+  const fp = Math.min(1, Math.max(0.1, Number(fatorPotencia || 0.95)))
+  const picoKw = picoKva * fp
   const critica = Number(potenciaCriticaKw || 0)
   const horas = Number(duracaoHoras || 0)
   const dias = Number(autonomiaDias || 1)
@@ -46,7 +49,7 @@ export function calcHybrid({
 
   let energiaBase
   if (objetivo === 'backup') energiaBase = critica * horas * dias
-  else if (objetivo === 'peak-shaving') energiaBase = Math.max(0, pico - critica) * horas * dias
+  else if (objetivo === 'peak-shaving') energiaBase = Math.max(0, picoKw - critica) * horas * dias
   else energiaBase = energia * dias
 
   const energiaNecessaria = Number.isFinite(Number(energiaNecessariaOverride)) ? Number(energiaNecessariaOverride) : energiaBase
@@ -56,9 +59,10 @@ export function calcHybrid({
   const qtdBaterias = Number(bateriaNominalKwh) > 0 ? Math.ceil(capacidadeNominal / Number(bateriaNominalKwh)) : 0
   const capacidadeInstalada = qtdBaterias * Number(bateriaNominalKwh || 0)
   const potenciaBateriaDisponivel = qtdBaterias * Number(bateriaPotenciaKw || 0)
-  const potenciaInversorNecessaria = Math.max(pico, critica) * margin
+  const potenciaInversorNecessaria = Math.max(picoKva, critica / fp) * margin
+  const potenciaBateriaNecessaria = Math.max(critica, picoKw)
   const inversorAtende = Number(inversorPotenciaKva || 0) >= potenciaInversorNecessaria
-  const bateriaAtendePotencia = potenciaBateriaDisponivel >= Math.max(critica, pico)
+  const bateriaAtendePotencia = potenciaBateriaDisponivel >= potenciaBateriaNecessaria
 
   return {
     energiaBase,
@@ -69,6 +73,9 @@ export function calcHybrid({
     capacidadeInstalada,
     potenciaBateriaDisponivel,
     potenciaInversorNecessaria,
+    potenciaBateriaNecessaria,
+    fatorPotencia: fp,
+    potenciaPicoKw: picoKw,
     inversorAtende,
     bateriaAtendePotencia,
   }
