@@ -116,3 +116,41 @@ export function calcHybridFromLoads({ loads = [], backupHours = 8 }) {
     loadCount: normalized.length,
   }
 }
+
+
+export function calcPriceFormation({
+  kit,
+  instalacao,
+  projetoEletrico,
+  art,
+  materialCc,
+  materialCa,
+  transformador,
+  frete,
+  outros,
+  impostos,
+  comissao,
+  margem,
+}) {
+  const values = {
+    kit, instalacao, projetoEletrico, art, materialCc, materialCa,
+    transformador, frete, outros,
+  }
+  const custoDireto = Object.values(values).reduce((sum, value) => sum + Math.max(0, Number(value || 0)), 0)
+  const imposto = Math.max(0, Number(impostos || 0))
+  const comissaoValue = Math.max(0, Number(comissao || 0))
+  const margemPercent = Math.max(0, Number(margem || 0))
+  const baseAntesMargem = custoDireto + imposto + comissaoValue
+  const precoVenda = baseAntesMargem * (1 + margemPercent / 100)
+  const lucroBruto = precoVenda - custoDireto
+  const lucroLiquido = precoVenda - baseAntesMargem
+  const margemLiquida = precoVenda > 0 ? lucroLiquido / precoVenda : 0
+  return {
+    custoDireto,
+    baseAntesMargem,
+    precoVenda,
+    lucroBruto,
+    lucroLiquido,
+    margemLiquida,
+  }
+}
