@@ -17,23 +17,25 @@ const initial = [{
   tarifa: 1.18,
   iluminacaoImpostos: 51.56,
   valorConta: 110.53,
+  valorFatura: 110.53,
   saldoAtual: 27544,
 }]
 
 function calc(r) {
   const expectativa = r.potenciaKwp * 5.2 * 0.81 * 30
   const saldoGeracao = r.energiaInjetada - (r.consumoRede - 50)
-  const consumoDuranteGeracao = r.geracao - r.energiaInjetada
-  const consumoTotal = r.consumoRede + consumoDuranteGeracao
+  const saldoConsumo = r.geracao - r.energiaInjetada
+  const consumoTotal = r.consumoRede + saldoConsumo
   const aproveitamento = expectativa ? r.geracao / expectativa : 0
-  const saldoMes = r.energiaInjetada - r.consumoRede
   const economia = r.geracao * r.tarifa
-  const consumoCemig = consumoTotal ? r.consumoRede / consumoTotal : 0
-  const consumoUsina = consumoTotal ? consumoDuranteGeracao / consumoTotal : 0
+  const energiaConcessionaria = r.valorFatura ?? 110.53
+  const custoConcessionaria = energiaConcessionaria - (r.iluminacaoImpostos || 0)
+  const fatorCemig = consumoTotal ? r.consumoRede / consumoTotal : 0
+  const fatorUsina = consumoTotal ? saldoConsumo / consumoTotal : 0
   const arvores = r.geracao / 333.33
   const agua = arvores * 1.32
   const co2 = arvores * 0.0983
-  return { expectativa, saldoGeracao, consumoDuranteGeracao, consumoTotal, aproveitamento, saldoMes, economia, consumoCemig, consumoUsina, arvores, agua, co2 }
+  return { expectativa, saldoGeracao, saldoConsumo, consumoTotal, aproveitamento, economia, custoConcessionaria, fatorCemig, fatorUsina, arvores, agua, co2 }
 }
 
 export default function GeracaoPage() {
@@ -61,6 +63,7 @@ export default function GeracaoPage() {
       tarifa: Number(form.tarifa),
       iluminacaoImpostos: Number(form.iluminacaoImpostos || 0),
       valorConta: Number(form.valorConta || 0),
+      valorFatura: Number(form.valorConta || 0),
       saldoAtual: Number(form.saldoAtual || 0),
     }
     setRows(x => [value, ...x])
