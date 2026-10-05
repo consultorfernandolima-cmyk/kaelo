@@ -1,0 +1,9 @@
+import { Link } from 'react-router-dom'
+import { ArrowRight, FileText, Package, ReceiptText, UsersRound } from 'lucide-react'
+const items=[
+ {to:'/clientes',title:'Parceiros',text:'Clientes, fornecedores, representantes, funcionários e usuários vinculados.',icon:UsersRound},
+ {to:'/estoque',title:'Estoque',text:'Mesma base de estoque, com operações comerciais conforme a licença.',icon:Package},
+ {to:'/propostas',title:'Pedidos / Orçamentos',text:'Orçamentos e propostas comerciais antes do faturamento.',icon:FileText},
+ {to:'/comercial/faturamento',title:'Faturamento',text:'Faturar pedido e preparar emissão de NFe, CFe ou NFCe conforme operação e integração.',icon:ReceiptText},
+]
+export default function ComercialPage(){return <section className="space-y-6"><header><p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Módulo</p><h2 className="page-title">Comercial</h2><p className="page-subtitle">Vendas, parceiros, orçamento, estoque e faturamento em um único processo.</p></header><div className="grid gap-4 md:grid-cols-2">{items.map(({to,title,text,icon:Icon})=><Link key={title} to={to} className="surface-card group p-5 transition hover:-translate-y-0.5 hover:shadow-md"><div className="flex items-start justify-between"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900/5 text-navy-800"><Icon size={19}/></div><ArrowRight size={18} className="text-slate-400 group-hover:translate-x-0.5"/></div><h3 className="mt-4 font-semibold text-navy-900">{title}</h3><p className="mt-1 text-sm leading-6 text-slate-500">{text}</p></Link>)}</div><div className="surface-card p-5"><p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Regra estrutural</p><p className="mt-2 text-sm leading-6 text-slate-600">Parceiros e estoque são tabelas centrais. Comercial apenas apresenta os campos e ações liberados pelo módulo, licença, grupo e perfil.</p></div></section>}

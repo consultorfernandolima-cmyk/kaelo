@@ -1,16 +1,22 @@
 import { useMemo, useState } from 'react'
-import { Plus, Search, Layers3, FolderTree } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowLeft, Plus, Search, Layers3, FolderTree } from 'lucide-react'
 
 const initialGroups = [
-  { id: 1, name: 'Materiais elétricos', description: 'Materiais e componentes para instalações elétricas.', families: 2, active: true },
-  { id: 2, name: 'Serviços', description: 'Serviços técnicos e de instalação.', families: 1, active: true },
-  { id: 3, name: 'Equipamentos', description: 'Equipamentos e itens de apoio.', families: 1, active: true },
+  { id: 1, name: 'Manutenção', description: 'Manutenção preventiva, corretiva e diagnóstico.', families: 2, active: true },
+  { id: 2, name: 'Limpeza', description: 'Limpeza técnica de módulos e estruturas.', families: 1, active: true },
+  { id: 3, name: 'Monitoramento', description: 'Geração, desempenho e relatórios operacionais.', families: 1, active: true },
+  { id: 4, name: 'Materiais elétricos', description: 'Materiais e componentes para instalações.', families: 2, active: true },
+  { id: 5, name: 'Equipamentos', description: 'Equipamentos e componentes da usina.', families: 1, active: true },
 ]
 const initialFamilies = [
-  { id: 1, group: 'Materiais elétricos', name: 'Cabos e condutores', description: 'Cabos, fios e condutores.', active: true },
-  { id: 2, group: 'Materiais elétricos', name: 'Proteção elétrica', description: 'Disjuntores, DPS e proteção.', active: true },
-  { id: 3, group: 'Serviços', name: 'Instalação elétrica', description: 'Serviços de instalação e manutenção.', active: true },
-  { id: 4, group: 'Equipamentos', name: 'Equipamentos solares', description: 'Equipamentos relacionados à geração solar.', active: true },
+  { id: 1, group: 'Manutenção', name: 'Preventiva', description: 'Inspeções e manutenção preventiva.', active: true },
+  { id: 2, group: 'Manutenção', name: 'Corretiva', description: 'Diagnóstico e manutenção corretiva.', active: true },
+  { id: 3, group: 'Limpeza', name: 'Módulos', description: 'Limpeza dos módulos fotovoltaicos.', active: true },
+  { id: 4, group: 'Monitoramento', name: 'Desempenho', description: 'Monitoramento e relatórios de desempenho.', active: true },
+  { id: 5, group: 'Materiais elétricos', name: 'Cabos e condutores', description: 'Cabos, fios e condutores.', active: true },
+  { id: 6, group: 'Materiais elétricos', name: 'Proteção elétrica', description: 'Disjuntores, DPS e proteção.', active: true },
+  { id: 7, group: 'Equipamentos', name: 'Equipamentos solares', description: 'Equipamentos relacionados à geração solar.', active: true },
 ]
 
 export default function GruposFamiliasPage() {
@@ -38,7 +44,7 @@ export default function GruposFamiliasPage() {
   return <section className="space-y-5">
     <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Cadastros</p><h2 className="page-title">Grupos e famílias</h2><p className="page-subtitle">Classificação básica para organizar produtos e serviços.</p></div>
-      <button onClick={() => setModal(tab)} className="btn-primary"><Plus size={16}/> Novo {tab === 'grupos' ? 'grupo' : 'família'}</button>
+      <div className="flex flex-wrap gap-2"><Link to="/cadastros/produtos" className="btn-secondary"><ArrowLeft size={16}/> Produtos e serviços</Link><button onClick={() => setModal(tab)} className="btn-primary"><Plus size={16}/> Novo {tab === 'grupos' ? 'grupo' : 'família'}</button></div>
     </header>
     <div className="surface-card overflow-hidden">
       <div className="flex flex-col gap-3 border-b border-slate-200 p-4 md:flex-row md:items-center md:justify-between">

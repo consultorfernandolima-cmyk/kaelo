@@ -1,20 +1,23 @@
 import { useMemo, useState } from 'react'
-import { Plus, Search } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowLeft, Layers3, Plus, Search } from 'lucide-react'
 
-const groups = ['Materiais elétricos', 'Serviços', 'Equipamentos']
-const families = ['Cabos e condutores', 'Proteção elétrica', 'Instalação elétrica', 'Equipamentos solares']
+const groups = ['Manutenção', 'Limpeza', 'Monitoramento', 'Materiais elétricos', 'Equipamentos']
+const families = ['Preventiva', 'Corretiva', 'Módulos', 'Desempenho', 'Cabos e condutores', 'Proteção elétrica', 'Equipamentos solares']
 const initial = [
  {id:1,type:'Produto',code:'PROD-001',name:'Cabo solar 6mm',family:'Cabos e condutores',unit:'m',price:'8,90',active:true},
  {id:2,type:'Produto',code:'PROD-002',name:'Disjuntor bipolar 40A',family:'Proteção elétrica',unit:'un',price:'54,90',active:true},
  {id:3,type:'Produto',code:'PROD-003',name:'Kit de instalação solar',family:'Equipamentos solares',unit:'kit',price:'450,00',active:true},
- {id:4,type:'Serviço',code:'SERV-001',name:'Instalação elétrica',family:'Instalação elétrica',unit:'serviço',price:'350,00',active:true},
- {id:5,type:'Serviço',code:'SERV-002',name:'Manutenção elétrica',family:'Instalação elétrica',unit:'serviço',price:'220,00',active:true},
+ {id:4,type:'Serviço',code:'SERV-001',name:'Inspeção preventiva da usina',family:'Preventiva',unit:'serviço',price:'0,00',active:true},
+ {id:5,type:'Serviço',code:'SERV-002',name:'Manutenção corretiva',family:'Corretiva',unit:'serviço',price:'0,00',active:true},
+ {id:6,type:'Serviço',code:'SERV-003',name:'Limpeza dos módulos fotovoltaicos',family:'Módulos',unit:'serviço',price:'0,00',active:true},
+ {id:7,type:'Serviço',code:'SERV-004',name:'Relatório mensal de desempenho',family:'Desempenho',unit:'serviço',price:'0,00',active:true},
 ]
 export default function ProdutosPage(){
  const [items,setItems]=useState(initial),[q,setQ]=useState(''),[modal,setModal]=useState(false)
  const rows=useMemo(()=>items.filter(i=>Object.values(i).some(v=>String(v).toLowerCase().includes(q.toLowerCase()))),[items,q])
  function save(e){e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget));setItems(x=>[...x,{id:Date.now(),...v,active:true}]);setModal(false)}
- return <section className="space-y-5"><header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Cadastros</p><h2 className="page-title">Produtos e serviços</h2><p className="page-subtitle">Itens comercializados e serviços executados pelo Kaelo.</p></div><button onClick={()=>setModal(true)} className="btn-primary"><Plus size={16}/> Novo item</button></header>
+ return <section className="space-y-5"><header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Cadastros</p><h2 className="page-title">Produtos e serviços</h2><p className="page-subtitle">Itens comercializados e serviços executados pelo Kaelo.</p></div><div className="flex flex-wrap gap-2"><Link to="/cadastros" className="btn-secondary"><ArrowLeft size={16}/> Cadastros</Link><Link to="/cadastros/grupos-familias" className="btn-secondary"><Layers3 size={16}/> Grupos e famílias</Link><button onClick={()=>setModal(true)} className="btn-primary"><Plus size={16}/> Novo item</button></div></header>
  <div className="surface-card overflow-hidden"><div className="border-b border-slate-200 p-4"><div className="relative max-w-md"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"/><input className="input pl-9" placeholder="Pesquisar por código, nome ou classificação..." value={q} onChange={e=>setQ(e.target.value)}/></div></div><div className="overflow-x-auto"><table className="data-table"><thead><tr><th>Código</th><th>Tipo</th><th>Descrição</th><th>Família</th><th>Unidade</th><th>Preço</th><th>Status</th></tr></thead><tbody>{rows.map(i=><tr key={i.id}><td className="font-medium">{i.code}</td><td>{i.type}</td><td>{i.name}</td><td>{i.family}</td><td>{i.unit}</td><td>R$ {i.price}</td><td><span className="status-pill">{i.active?'Ativo':'Inativo'}</span></td></tr>)}</tbody></table></div></div>
  {modal&&<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4"><form onSubmit={save} className="w-full max-w-xl rounded-2xl bg-white p-6 shadow-xl"><h3 className="text-lg font-semibold text-navy-900">Novo produto ou serviço</h3><div className="mt-5 grid gap-4 md:grid-cols-2"><label className="field"><span>Tipo</span><select name="type" className="input"><option>Produto</option><option>Serviço</option></select></label><label className="field"><span>Código</span><input name="code" className="input" required/></label><label className="field md:col-span-2"><span>Nome / descrição</span><input name="name" className="input" required/></label><label className="field"><span>Família</span><select name="family" className="input" required>{families.map(f=><option key={f}>{f}</option>)}</select></label><label className="field"><span>Unidade</span><input name="unit" className="input" placeholder="un, m, kg, serviço..." required/></label><label className="field"><span>Preço de referência</span><input name="price" className="input" placeholder="0,00" required/></label></div><div className="mt-6 flex justify-end gap-2"><button type="button" onClick={()=>setModal(false)} className="btn-secondary">Cancelar</button><button className="btn-primary">Salvar localmente</button></div></form></div>}</section>
 }
