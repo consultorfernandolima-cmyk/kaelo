@@ -28,6 +28,7 @@ import LoginPage from './modules/auth/LoginPage.jsx'
 import EmpresaPage from './modules/empresa/EmpresaPage.jsx'
 import ComercialPage from './modules/comercial/ComercialPage.jsx'
 import ServicosPage from './modules/servicos/ServicosPage.jsx'
+import FaturamentoPage from './modules/faturamento/FaturamentoPage.jsx'
 
 const modulePages = {}
 
@@ -39,6 +40,8 @@ export default function App() {
         <Route path="/empresa" element={<EmpresaPage />} />
         <Route path="/comercial" element={<ComercialPage />} />
         <Route path="/servicos" element={<ServicosPage />} />
+        <Route path="/comercial/faturamento" element={<FaturamentoPage />} />
+        <Route path="/servicos/faturamento" element={<FaturamentoPage />} />
         <Route path="/" element={<DashboardPage />} />
         <Route path="/cadastros" element={<CadastrosPage />} />
         <Route path="/clientes" element={<ClientesPage />} />
