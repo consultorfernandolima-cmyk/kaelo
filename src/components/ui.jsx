@@ -56,3 +56,9 @@ export function formatCurrency(value) {
 export function formatDate(iso) {
   return new Date(`${iso}T12:00:00`).toLocaleDateString('pt-BR')
 }
+
+
+export function ContextBack({ to, label = 'Voltar' }) {
+  const go = () => { window.history.pushState({}, '', to); window.dispatchEvent(new PopStateEvent('popstate')) }
+  return <button type="button" onClick={go} className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-navy-900">← {label}</button>
+}
