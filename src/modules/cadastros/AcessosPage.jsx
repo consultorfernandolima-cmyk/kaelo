@@ -30,8 +30,8 @@ function PermissionCell({ value }) {
       : <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500"><Eye size={13} /> Visualização</span>
 }
 
-export default function AcessosPage() {
-  const [tab, setTab] = useState('usuarios')
+export default function AcessosPage({ focusedTab = null }) {
+  const [tab, setTab] = useState(focusedTab || 'usuarios')
   const [groups, setGroups] = useState(initialGroups)
   const [profiles, setProfiles] = useState(initialProfiles)
   const [users, setUsers] = useState(initialUsers)
