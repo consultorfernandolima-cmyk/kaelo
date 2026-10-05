@@ -4,7 +4,7 @@ import { ArrowLeft, BarChart3, BriefcaseBusiness, ChevronRight, FileText, Layout
 
 const modules = [
   { to: '/empresa', label: 'Empresa', icon: Building2, children: [
-    { to: '/configuracoes/acessos', label: 'Usuários' },
+    { to: '/empresa/usuarios', label: 'Usuários' },
     { to: '/configuracoes/acessos', label: 'Perfil e Grupo de Usuários' },
     { to: '/empresa', label: 'Sobre versão / licença' },
   ]},
