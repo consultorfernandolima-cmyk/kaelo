@@ -1,0 +1,9 @@
+import { Link } from 'react-router-dom'
+import { ArrowRight, ClipboardList, Package, ReceiptText, UsersRound } from 'lucide-react'
+const items=[
+ {to:'/clientes',title:'Cadastros · Parceiros',text:'A mesma tabela de parceiros, com visão adequada à prestação de serviços.',icon:UsersRound},
+ {to:'/ordens-servico',title:'Ordem de Serviço',text:'Abrir, agendar, executar, registrar evidências e concluir OS.',icon:ClipboardList},
+ {to:'/estoque',title:'Estoque',text:'Materiais consumidos, insumos, peças e itens imobilizados usados no serviço.',icon:Package},
+ {to:'/servicos/faturamento',title:'Faturamento',text:'Faturar OS e preparar NFSe e/ou NFe, CFe ou NFCe conforme a operação.',icon:ReceiptText},
+]
+export default function ServicosPage(){return <section className="space-y-6"><header><p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Módulo</p><h2 className="page-title">Serviços</h2><p className="page-subtitle">Execução de serviços, ordem de serviço, materiais e faturamento.</p></header><div className="grid gap-4 md:grid-cols-2">{items.map(({to,title,text,icon:Icon})=><Link key={title} to={to} className="surface-card group p-5 transition hover:-translate-y-0.5 hover:shadow-md"><div className="flex items-start justify-between"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900/5 text-navy-800"><Icon size={19}/></div><ArrowRight size={18} className="text-slate-400 group-hover:translate-x-0.5"/></div><h3 className="mt-4 font-semibold text-navy-900">{title}</h3><p className="mt-1 text-sm leading-6 text-slate-500">{text}</p></Link>)}</div><div className="surface-card p-5"><p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Integração futura</p><p className="mt-2 text-sm leading-6 text-slate-600">Uma OS poderá consumir estoque, formar custo, faturar e gerar o lançamento financeiro sem duplicar cadastro.</p></div></section>}
