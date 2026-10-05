@@ -64,16 +64,17 @@ export default function AcessosPage({ focusedTab = null }) {
   const activeProfile = profiles.find(p => p.id === selectedProfile) || profiles[0]
 
   return <section className="space-y-5">
+    {focusedTab && <Link to="/empresa" className="inline-flex items-center gap-2 px-1 py-1 text-sm font-semibold text-slate-500 hover:text-navy-900">← Voltar para Empresa</Link>}
     <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Configurações</p>
         <h2 className="page-title">Configurações de Acesso</h2>
         <p className="page-subtitle">Usuários, grupos e perfis. O perfil define quais módulos o usuário pode acessar e se o acesso é de visualização, alteração ou total.</p>
       </div>
-      <div className="flex items-center gap-2"><Link to="/empresa" className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm hover:border-slate-300 hover:text-navy-900"><ArrowLeft size={15}/> Empresa</Link><button className="inline-flex items-center gap-2 rounded-xl bg-navy-900 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-navy-800" onClick={() => setModal(tab)}><Plus size={15}/> Novo {tab === 'usuarios' ? 'usuário' : tab === 'grupos' ? 'grupo' : 'perfil'}</button></div>
+      <div className="flex items-center gap-2">{!focusedTab && <Link to="/empresa" className="btn-secondary">Empresa</Link>}<button className="btn-primary" onClick={() => setModal(tab)}><Plus size={15}/> Novo {tab === 'usuarios' ? 'usuário' : tab === 'grupos' ? 'grupo' : 'perfil'}</button></div>
     </header>
 
-    <div className="grid gap-3 md:grid-cols-3">
+    {!focusedTab && <div className="grid gap-3 md:grid-cols-3">
       {[
         ['usuarios', 'Usuários', users.length, UserRound],
         ['grupos', 'Grupos de usuários', groups.length, UsersRound],
@@ -90,13 +91,15 @@ export default function AcessosPage({ focusedTab = null }) {
       ))}
     </div>
 
+    </div>}
     <div className="surface-card overflow-hidden">
-      <div className="flex flex-wrap gap-1 border-b border-slate-200 p-3">
+      {!focusedTab && <div className="flex flex-wrap gap-1 border-b border-slate-200 p-3">
         {[['usuarios','Usuários',UserRound],['grupos','Grupos de usuários',UsersRound],['perfis','Perfis de acesso',ShieldCheck]].map(([key,label,Icon]) =>
           <button key={key} onClick={() => setTab(key)} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === key ? 'bg-navy-900 text-white' : 'text-slate-500 hover:bg-slate-100'}`}><Icon size={15} className="mr-2 inline"/>{label}</button>
         )}
       </div>
 
+      </div>}
       <div className="overflow-x-auto">
         {tab === 'usuarios' && <table className="data-table">
           <thead><tr><th>Nome</th><th>Usuário</th><th>E-mail</th><th>Grupo</th><th>Perfil</th><th>Nível de acesso</th><th>Status</th><th>Ações</th></tr></thead>
