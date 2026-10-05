@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { BarChart3, BriefcaseBusiness, ChevronDown, FileText, LayoutDashboard, Settings, Sun, WalletCards, Wrench, Building2 } from 'lucide-react'
 
 const modules = [
-  { to:'/empresa',label:'Empresa',icon:Building2,children:[{to:'/empresa/usuarios',label:'Usuários'},{to:'/configuracoes/acessos',label:'Perfis e grupos de usuários'},{to:'/empresa',label:'Sobre versão / licença'}]},
+  { to:'/empresa',label:'Empresa',icon:Building2,children:[{to:'/empresa/usuarios',label:'Usuários'},{to:'/empresa/perfis-grupos',label:'Perfil e Grupo de Usuários'},{to:'/empresa',label:'Sobre versão / licença'}]},
   { to:'/crm',label:'CRM',icon:BriefcaseBusiness,children:[{to:'/crm',label:'Leads'},{to:'/propostas',label:'Propostas'},{to:'/comercial/faturamento',label:'Faturamento'},{to:'/contratos',label:'Contratos'}]},
   { to:'/comercial',label:'Comercial',icon:FileText,children:[{to:'/clientes',label:'Parceiros'},{to:'/estoque',label:'Estoque'},{to:'/propostas',label:'Pedido / Orçamento'},{to:'/comercial/faturamento',label:'Faturamento'}]},
   { to:'/servicos',label:'Serviços',icon:Wrench,children:[{to:'/clientes',label:'Parceiros'},{to:'/ordens-servico',label:'Ordem de Serviço'},{to:'/estoque',label:'Estoque'},{to:'/servicos/faturamento',label:'Faturamento'}]},
