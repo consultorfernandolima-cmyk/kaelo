@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Building2, Eye, Filter, Mail, MoreHorizontal, Pencil, Phone, Plus, Search, UserRound, X } from 'lucide-react'
 import { StatusBadge } from '../../components/ui.jsx'
 import { parceiros as parceirosIniciais } from '../../data/mock.js'
+import { ContextBack } from '../../components/ui.jsx'
 
 const initialForm = {
   tipoPessoa: 'PJ', razaoSocial: '', nomeFantasia: '', documento: '', email: '',
@@ -76,6 +77,7 @@ export default function ClientesPage() {
 
   return (
     <section className="space-y-5">
+      <ContextBack to="/comercial" label="Voltar ao Comercial" />
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Cadastros</p>
