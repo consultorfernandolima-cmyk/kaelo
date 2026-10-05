@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Eye, Plus, Printer, Search, ShieldCheck, Sun, Calculator, AlertTriangle } from 'lucide-react'
-import { formatCurrency, StatusBadge } from '../../components/ui.jsx'
+import { formatCurrency, StatusBadge, ContextBack } from '../../components/ui.jsx'
 import { calcHybrid, calcHybridFromLoads, calcOnGrid, calcPriceFormation } from './dimensionamento.js'
 import { IRRADIANCE_SOURCE } from './irradiacao.js'
 
@@ -55,6 +55,7 @@ export default function PropostasPage(){
  function removeLoad(index){setLoads(x=>x.filter((_,i)=>i!==index))}
 
  return <section className="space-y-5">
+  <ContextBack to="/crm" label="Voltar ao CRM" />
   <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
    <div>
     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Comercial · Gestão de Usinas</p>
