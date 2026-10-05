@@ -19,6 +19,7 @@ export default function OrdensServicoPage() {
   const [view, setView] = useState(null)
   const [report, setReport] = useState(null)
   const [reports, setReports] = useState({})
+  const [evidence, setEvidence] = useState({})
 
   const rows = useMemo(() => items.filter(i => Object.values(i).some(v => String(v).toLowerCase().includes(q.toLowerCase()))), [items, q])
 
@@ -48,6 +49,7 @@ export default function OrdensServicoPage() {
           : 'Execução do atendimento previsto na ordem de serviço e verificação operacional.',
       observacoes: item.observacoes || 'Sem observações adicionais.',
       recomendacoes: 'Manter o plano de manutenção e registrar o próximo atendimento no histórico da usina.',
+      evidencias: evidence[item.id] || 0,
     }
     setReports(x => ({ ...x, [item.id]: generated }))
     setReport(generated)
@@ -101,6 +103,7 @@ export default function OrdensServicoPage() {
       <div className="space-y-5 p-6">
         <div className="grid gap-4 md:grid-cols-4"><div><p className="text-xs text-slate-500">Modelo</p><p className="mt-1 font-semibold">{view.modelo}</p></div><div><p className="text-xs text-slate-500">Serviço</p><p className="mt-1 font-semibold">{view.tipo}</p></div><div><p className="text-xs text-slate-500">Data</p><p className="mt-1 font-semibold">{formatDate(view.data)}</p></div><div><p className="text-xs text-slate-500">Status</p><p className="mt-1"><StatusBadge tone={statusTone[view.status] || 'slate'}>{view.status}</StatusBadge></p></div></div>
         <div className="rounded-xl border border-slate-200 p-5"><p className="text-xs uppercase tracking-wider text-slate-400">Técnico responsável</p><p className="mt-2 text-base text-navy-900">{view.tecnico}</p><p className="mt-4 text-xs uppercase tracking-wider text-slate-400">Observações</p><p className="mt-2 text-sm leading-6 text-slate-600">{view.observacoes || 'Sem observações registradas.'}</p></div>
+        <div className="rounded-xl bg-slate-50 p-5"><p className="text-sm font-semibold text-navy-900">Evidências do atendimento</p><p className="mt-2 text-sm text-slate-600">Quantidade de registros fotográficos associados à OS.</p><input type="number" min="0" className="input mt-3 max-w-xs" value={evidence[view.id] || 0} onChange={e => setEvidence(x => ({ ...x, [view.id]: Number(e.target.value || 0) }))} /> </div>
         <div className="rounded-xl bg-slate-50 p-5"><p className="text-sm font-semibold text-navy-900">Próximo passo operacional</p><p className="mt-2 text-sm leading-6 text-slate-600">{nextStatus[view.status] ? `Avançar para “${nextStatus[view.status]}” e, após a conclusão, gerar o relatório do atendimento.` : 'Atendimento concluído. Próxima etapa: relatório técnico e histórico da usina.'}</p></div>
         <div className="flex flex-wrap gap-2"><button className="btn-primary" onClick={() => window.print()}><Printer size={16} /> Imprimir OS / PDF</button>{nextStatus[view.status] && <button className="btn-secondary" onClick={() => advance(view)}>Avançar status</button>}{view.status === 'Concluída' && <button className="btn-secondary" onClick={() => createReport(view)}><FileText size={16} /> Gerar relatório técnico</button>}{reports[view.id] && <button className="btn-secondary" onClick={() => { setReport(reports[view.id]); setView(null) }}><FileText size={16} /> Ver relatório</button>}</div>
       </div>
