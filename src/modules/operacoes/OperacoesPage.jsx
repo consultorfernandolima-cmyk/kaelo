@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useLocation, useMemo, useState } from 'react'
 import { CalendarDays, CheckCircle2, ClipboardList, Clock3, FileText, Plus, Search, UserRound, WalletCards, X } from 'lucide-react'
 import { StatusBadge } from '../../components/ui.jsx'
 
@@ -20,7 +20,22 @@ function money(value) {
 }
 
 export default function OperacoesPage() {
-  const [items, setItems] = useState(initialOrders)
+  const location = useLocation()
+  const incomingContract = location.state?.contract
+  const [items, setItems] = useState(() => incomingContract ? [{
+    id: 'OP-NEW',
+    cliente: incomingContract.cliente,
+    servico: incomingContract.objeto,
+    data: '2026-10-08',
+    responsavel: 'A definir',
+    status: 'Pendente',
+    origem: `Contrato ${incomingContract.id}`,
+    contrato: incomingContract.id,
+    custoMateriais: 0,
+    custoMaoObra: 0,
+    custoDeslocamento: 0,
+    valorFaturavel: Number(incomingContract.valor || 0),
+  }, ...initialOrders] : initialOrders)
   const [search, setSearch] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [report, setReport] = useState(null)
