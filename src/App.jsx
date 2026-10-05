@@ -50,6 +50,7 @@ export default function App() {
         <Route path="/cadastros/produtos" element={<ProdutosPage />} />
         <Route path="/configuracoes" element={<ConfiguracoesPage />} />
         <Route path="/configuracoes/acessos" element={<AcessosPage />} />
+        <Route path="/empresa/usuarios" element={<AcessosPage focusedTab="usuarios" />} />
         <Route path="/configuracoes/ufv/ongrid" element={<ConfiguracaoUfvPage mode="ongrid" />} />
         <Route path="/configuracoes/ufv/hibrido" element={<ConfiguracaoUfvPage mode="hibrido" />} />
         <Route path="/configuracoes/financeiro/receber" element={<ModulePage title="Contas a Receber" description="Regras de cobrança, multa, juros, antecipação e meios de pagamento." eyebrow="Configurações · Financeiro" />} />
