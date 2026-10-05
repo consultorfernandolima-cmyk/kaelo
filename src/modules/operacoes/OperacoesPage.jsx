@@ -1,6 +1,7 @@
 import { useLocation, useMemo, useState } from 'react'
-import { CalendarDays, CheckCircle2, ClipboardList, Clock3, FileText, Plus, Search, UserRound, WalletCards, X } from 'lucide-react'
+import { CalendarDays, CheckCircle2, ClipboardList, Clock3, FileText, Plus, Search, UserRound, WalletCards, X, ArrowRight } from 'lucide-react'
 import { StatusBadge } from '../../components/ui.jsx'
+import { useNavigate } from 'react-router-dom'
 
 const initialOrders = [
   { id: 'OP-1001', cliente: 'Hope Soluções em Energia', servico: 'Instalação elétrica', data: '2026-10-04', responsavel: 'Ana Souza', status: 'Planejada', origem: 'Comercial', custoMateriais: 620, custoMaoObra: 1800, custoDeslocamento: 180, valorFaturavel: 3200 },
@@ -21,6 +22,7 @@ function money(value) {
 
 export default function OperacoesPage() {
   const location = useLocation()
+  const navigate = useNavigate()
   const incomingContract = location.state?.contract
   const [items, setItems] = useState(() => incomingContract ? [{
     id: 'OP-NEW',
@@ -185,7 +187,7 @@ export default function OperacoesPage() {
             <p className="mt-1 text-sm leading-6 text-slate-500">Ao concluir a operação, este custo poderá originar o lançamento financeiro correspondente. Nesta etapa o registro continua local, sem gravar no Supabase.</p>
           </div>
           <div className="mt-6 flex justify-end gap-2">
-            <button type="button" className="btn-secondary" onClick={() => window.print()}><FileText size={14} /> Imprimir / PDF</button>
+            <button type="button" className="btn-secondary" onClick={() => window.print()}><FileText size={14} /> Imprimir / PDF</button><button type="button" className="btn-secondary" onClick={() => navigate('/financeiro',{state:{operation:report}})}><ArrowRight size={14} /> Enviar ao financeiro</button>
             <button type="button" className="btn-primary" onClick={() => setReport(null)}>Fechar</button>
           </div>
         </div>
