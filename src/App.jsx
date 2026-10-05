@@ -24,13 +24,21 @@ import EstoquePage from './modules/estoque/EstoquePage.jsx'
 import OperacoesPage from './modules/operacoes/OperacoesPage.jsx'
 import FinanceiroPage from './modules/finance/FinanceiroPage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
+import LoginPage from './modules/auth/LoginPage.jsx'
+import EmpresaPage from './modules/empresa/EmpresaPage.jsx'
+import ComercialPage from './modules/comercial/ComercialPage.jsx'
+import ServicosPage from './modules/servicos/ServicosPage.jsx'
 
 const modulePages = {}
 
 export default function App() {
   return (
     <Routes>
+      <Route path="/login" element={<LoginPage />} />
       <Route element={<AppLayout />}>
+        <Route path="/empresa" element={<EmpresaPage />} />
+        <Route path="/comercial" element={<ComercialPage />} />
+        <Route path="/servicos" element={<ServicosPage />} />
         <Route path="/" element={<DashboardPage />} />
         <Route path="/cadastros" element={<CadastrosPage />} />
         <Route path="/clientes" element={<ClientesPage />} />
