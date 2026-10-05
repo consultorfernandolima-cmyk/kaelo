@@ -89,16 +89,12 @@ export default function AcessosPage({ focusedTab = null }) {
           <div className="mt-1 text-xs text-slate-500">{key === 'perfis' ? 'Módulos e níveis de permissão' : key === 'grupos' ? 'Organização dos usuários' : 'Identidade e vínculo de acesso'}</div>
         </button>
       ))}
-    </div>
-
     </div>}
     <div className="surface-card overflow-hidden">
       {!focusedTab && <div className="flex flex-wrap gap-1 border-b border-slate-200 p-3">
         {[['usuarios','Usuários',UserRound],['grupos','Grupos de usuários',UsersRound],['perfis','Perfis de acesso',ShieldCheck]].map(([key,label,Icon]) =>
           <button key={key} onClick={() => setTab(key)} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === key ? 'bg-navy-900 text-white' : 'text-slate-500 hover:bg-slate-100'}`}><Icon size={15} className="mr-2 inline"/>{label}</button>
         )}
-      </div>
-
       </div>}
       <div className="overflow-x-auto">
         {tab === 'usuarios' && <table className="data-table">
