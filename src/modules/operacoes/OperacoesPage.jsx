@@ -187,7 +187,7 @@ export default function OperacoesPage() {
             <p className="mt-1 text-sm leading-6 text-slate-500">Ao concluir a operação, este custo poderá originar o lançamento financeiro correspondente. Nesta etapa o registro continua local, sem gravar no Supabase.</p>
           </div>
           <div className="mt-6 flex justify-end gap-2">
-            <button type="button" className="btn-secondary" onClick={() => window.print()}><FileText size={14} /> Imprimir / PDF</button><button type="button" className="btn-secondary" onClick={() => navigate('/financeiro',{state:{operation:report}})}><ArrowRight size={14} /> Enviar ao financeiro</button>
+            <button type="button" className="btn-secondary" onClick={() => window.print()}><FileText size={14} /> Imprimir / PDF</button><button type="button" className="btn-secondary" onClick={() => navigate('/estoque',{state:{operation:report}})}><ArrowRight size={14} /> Registrar consumo</button><button type="button" className="btn-secondary" onClick={() => navigate('/financeiro',{state:{operation:report}})}><ArrowRight size={14} /> Enviar ao financeiro</button>
             <button type="button" className="btn-primary" onClick={() => setReport(null)}>Fechar</button>
           </div>
         </div>
