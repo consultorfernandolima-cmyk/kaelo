@@ -22,11 +22,10 @@ import AcessosPage from './modules/cadastros/AcessosPage.jsx'
 import ConfiguracoesPage from './modules/configuracoes/ConfiguracoesPage.jsx'
 import EstoquePage from './modules/estoque/EstoquePage.jsx'
 import OperacoesPage from './modules/operacoes/OperacoesPage.jsx'
+import FinanceiroPage from './modules/finance/FinanceiroPage.jsx'
 import ModulePage from './modules/shared/ModulePage.jsx'
 
-const modulePages = {
-  '/financeiro': ['Financeiro', 'Contas a pagar, receber, lançamentos e conciliação.', 'Financeiro'],
-}
+const modulePages = {}
 
 export default function App() {
   return (
@@ -46,6 +45,7 @@ export default function App() {
         <Route path="/crm" element={<CRMPage />} />
         <Route path="/contratos" element={<ContratosPage />} />
         <Route path="/relatorios" element={<RelatoriosPage />} />
+        <Route path="/financeiro" element={<FinanceiroPage />} />
         <Route path="/estoque" element={<EstoquePage />} />
         <Route path="/operacoes" element={<OperacoesPage />} />
         <Route path="/ordens-servico" element={<OrdensServicoPage />} />
