@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useLocation, useMemo, useState } from 'react'
 import { ArrowDownToLine, ArrowUpFromLine, Banknote, Plus, Search, WalletCards } from 'lucide-react'
 import { StatusBadge, formatCurrency, formatDate } from '../../components/ui.jsx'
 
@@ -34,10 +34,12 @@ function tone(status) {
 }
 
 export default function FinanceiroPage() {
+  const location = useLocation()
+  const incomingOperation = location.state?.operation
   const [tab, setTab] = useState('contas')
   const [search, setSearch] = useState('')
   const [accounts, setAccounts] = useState(initialAccounts)
-  const [receivables, setReceivables] = useState(initialReceivables)
+  const [receivables, setReceivables] = useState(() => incomingOperation ? [{ id:'CR-OP-'+incomingOperation.id, cliente:incomingOperation.cliente, descricao:'Serviço '+incomingOperation.servico, vencimento:incomingOperation.data || '2026-10-08', valor:Number(incomingOperation.valorFaturavel || 0), status:'Aberto', origem:incomingOperation.id }, ...initialReceivables] : initialReceivables)
   const [payables, setPayables] = useState(initialPayables)
   const [showForm, setShowForm] = useState(false)
 
