@@ -1,6 +1,6 @@
 import { useLocation, useMemo, useState } from 'react'
 import { ArrowDownToLine, ArrowUpFromLine, ClipboardList, Package, Plus, Search, Warehouse } from 'lucide-react'
-import { StatusBadge, formatCurrency } from '../../components/ui.jsx'
+import { StatusBadge, formatCurrency, ContextBack } from '../../components/ui.jsx'
 
 const initialProducts = [
   { id: 'PR-001', codigo: 'CAB-6MM', nome: 'Cabo solar 6mm', unidade: 'm', saldo: 1250, minimo: 500, custo: 4.85, local: 'Almoxarifado' },
@@ -88,6 +88,7 @@ export default function EstoquePage() {
   return (
     <section className="space-y-6">
       <header>
+        <ContextBack to="/comercial" label="Voltar ao Comercial" />
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Operação · Estoque</p>
         <div className="mt-1 flex flex-wrap items-end justify-between gap-4">
           <div><h2 className="page-title">Estoque</h2><p className="page-subtitle">Saldo, entradas, saídas e movimentações dos materiais utilizados pelo Kaelo.</p></div>
