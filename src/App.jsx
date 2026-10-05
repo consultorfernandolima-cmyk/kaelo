@@ -50,8 +50,8 @@ export default function App() {
         <Route path="/cadastros/produtos" element={<ProdutosPage />} />
         <Route path="/configuracoes" element={<ConfiguracoesPage />} />
         <Route path="/configuracoes/acessos" element={<AcessosPage />} />
-        <Route path="/configuracoes/ufv/ongrid" element={<ModulePage title="Parâmetros On-grid" description="Configuração de eficiência e parâmetros técnicos por cenário de inversor." eyebrow="Configurações · Gestão UFV" />} />
-        <Route path="/configuracoes/ufv/hibrido" element={<ModulePage title="Parâmetros Híbrido" description="Configuração de baterias, DoD, eficiência, degradação, autonomia e compatibilidade." eyebrow="Configurações · Gestão UFV" />} />
+        <Route path="/configuracoes/ufv/ongrid" element={<ConfiguracaoUfvPage mode="ongrid" />} />
+        <Route path="/configuracoes/ufv/hibrido" element={<ConfiguracaoUfvPage mode="hibrido" />} />
         <Route path="/configuracoes/financeiro/receber" element={<ModulePage title="Contas a Receber" description="Regras de cobrança, multa, juros, antecipação e meios de pagamento." eyebrow="Configurações · Financeiro" />} />
         <Route path="/configuracoes/financeiro/bancaria" element={<ModulePage title="Configuração Bancária" description="Parâmetros de boleto, remessa, retorno e DDA conforme banco e integração." eyebrow="Configurações · Financeiro" />} />
 
