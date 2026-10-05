@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useLocation, useMemo, useState } from 'react'
 import { ArrowDownToLine, ArrowUpFromLine, ClipboardList, Package, Plus, Search, Warehouse } from 'lucide-react'
 import { StatusBadge, formatCurrency } from '../../components/ui.jsx'
 
@@ -18,12 +18,14 @@ const initialMovements = [
 const locations = ['Almoxarifado', 'Veículo O&M']
 
 export default function EstoquePage() {
+  const location = useLocation()
+  const incomingOperation = location.state?.operation
   const [tab, setTab] = useState('saldo')
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState(initialProducts)
   const [movements, setMovements] = useState(initialMovements)
   const [showForm, setShowForm] = useState(false)
-  const [showMovement, setShowMovement] = useState(false)
+  const [showMovement, setShowMovement] = useState(Boolean(incomingOperation))
 
   const filteredProducts = useMemo(
     () => products.filter((item) => (item.codigo + ' ' + item.nome + ' ' + item.local).toLowerCase().includes(search.toLowerCase())),
@@ -129,14 +131,14 @@ export default function EstoquePage() {
       {showMovement && <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-900/40 p-4">
         <form onSubmit={addMovement} className="w-full max-w-xl rounded-2xl bg-white p-6 shadow-2xl">
           <h3 className="text-lg font-semibold text-navy-900">Movimentar estoque</h3>
-          <p className="mt-1 text-sm text-slate-500">Entrada de compra ou saída para operação/OS. O saldo é atualizado no demo.</p>
+          <p className="mt-1 text-sm text-slate-500">Entrada de compra ou saída para operação/OS. O saldo é atualizado no demo.{incomingOperation ? ` Operação ${incomingOperation.id} recebida para consumo.` : ''}</p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <label className="text-sm font-medium text-slate-700">Tipo<select name="tipo" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5"><option>Entrada</option><option>Saída</option></select></label>
             <label className="text-sm font-medium text-slate-700">Produto<select name="produto" required className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5">{products.map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}</select></label>
             <label className="text-sm font-medium text-slate-700">Quantidade<input name="quantidade" type="number" min="0.01" step="0.01" required className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5" /></label>
             <label className="text-sm font-medium text-slate-700">Data<input name="data" type="date" defaultValue="2026-10-08" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5" /></label>
-            <label className="text-sm font-medium text-slate-700">Origem<input name="origem" placeholder="Ex.: Compra, OS-1055" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5" /></label>
-            <label className="text-sm font-medium text-slate-700">Destino<input name="destino" placeholder="Ex.: Almoxarifado, cliente" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5" /></label>
+            <label className="text-sm font-medium text-slate-700">Origem<input name="origem" defaultValue={incomingOperation?.id || ''} placeholder="Ex.: Compra, OS-1055" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5" /></label>
+            <label className="text-sm font-medium text-slate-700">Destino<input name="destino" defaultValue={incomingOperation?.cliente || ''} placeholder="Ex.: Almoxarifado, cliente" className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5" /></label>
           </div>
           <div className="mt-6 flex justify-end gap-2"><button type="button" onClick={() => setShowMovement(false)} className="btn-secondary">Cancelar</button><button type="submit" className="btn-primary">Registrar movimento</button></div>
         </form>
