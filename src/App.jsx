@@ -29,6 +29,7 @@ import EmpresaPage from './modules/empresa/EmpresaPage.jsx'
 import ComercialPage from './modules/comercial/ComercialPage.jsx'
 import ServicosPage from './modules/servicos/ServicosPage.jsx'
 import FaturamentoPage from './modules/faturamento/FaturamentoPage.jsx'
+import ConfiguracaoUfvPage from './modules/configuracoes/ConfiguracaoUfvPage.jsx'
 
 const modulePages = {}
 
