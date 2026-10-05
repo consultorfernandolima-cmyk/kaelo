@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ClipboardCheck, Eye, FileText, Plus, Printer, Search, Wrench } from 'lucide-react'
-import { formatDate, StatusBadge } from '../../components/ui.jsx'
+import { formatDate, StatusBadge, ContextBack } from '../../components/ui.jsx'
 
 const initial = [
   { id: 'OS-1042', cliente: 'Fazenda Santa Luz', usina: 'Usina SL-12 kWp', modelo: 'Serviços O&M', tipo: 'Limpeza de módulos', data: '2026-10-04', tecnico: 'Ana Souza', status: 'Agendada', observacoes: 'Limpeza técnica dos módulos e inspeção visual.' },
@@ -66,7 +66,8 @@ export default function OrdensServicoPage() {
   }
 
   return <section className="space-y-5">
-    <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+    <ContextBack to="/servicos" label="Voltar a Serviços" />
+      <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-solar-green">Operações · Gestão de Usinas</p>
         <h2 className="page-title">Ordens de Serviço</h2>
