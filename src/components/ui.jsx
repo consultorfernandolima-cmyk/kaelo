@@ -58,6 +58,8 @@ export function formatDate(iso) {
 }
 
 
+import { Link } from 'react-router-dom'
+
 export function ContextBack({ to, label = 'Voltar' }) {
-  return <a href={to} className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-navy-900">← {label}</a>
+  return <Link to={to} className="mb-3 inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-navy-900">← {label}</Link>
 }
